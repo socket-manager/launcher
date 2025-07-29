@@ -1,0 +1,35 @@
+{
+    "name": "socket-manager/launcher",
+    "description": "SOCKET-MANAGER Launcher: サービス管理用ソケットマネージャーランチャー",
+    "type": "project",
+    "license": "MIT",
+    "keywords": [
+        "socket",
+        "manager",
+        "launcher",
+        "cli",
+        "service",
+        "monitoring"
+    ],
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "authors": [
+        {
+            "name": "lib.tech.engineer",
+            "email": "lib.tech.engineer@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "socket-manager/library": "^1.16"
+    },
+    "repositories": {
+        "socket-manager/library": {
+            "type": "vcs",
+            "url": "https://github.com/socket-manager/library.git"
+        }
+    }
+}

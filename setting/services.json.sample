@@ -1,0 +1,14 @@
+{
+    "cores":null,
+    "name":"サービス名1",
+    "group":"グループ名",
+    "path":"実行パス1（絶対 or 相対）",
+    "command":"コマンド文1"
+},
+{
+    "cores":[0,1,2],
+    "name":"サービス名2",
+    "group":null,
+    "path":"実行パス2（絶対 or 相対）",
+    "command":"コマンド文2"
+}

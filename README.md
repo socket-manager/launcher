@@ -94,4 +94,4 @@ cpuinfo
 ---
 
 ## License
-MIT, see <a href="https://github.com/socket-manager/new-project/blob/main/LICENSE">LICENSE file</a>.
+MIT, see <a href="https://github.com/socket-manager/launcher/blob/main/LICENSE">LICENSE file</a>.
