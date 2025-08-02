@@ -411,9 +411,9 @@ fail:
      */
     public function finishLauncher(): void
     {
-        if($this->cli_flg === true && $this->auto_restart !== true)
+        if($this->cli_flg === true)
         {
-            $this->emergencyShutdown();
+            $this->finishShutdown();
         }
     }
 

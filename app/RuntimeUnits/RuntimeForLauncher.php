@@ -195,7 +195,7 @@ class RuntimeForLauncher implements IEntryUnits
             if($order_action === null)
             {
                 $p_param->order_action_current = null;
-                $p_param->emergencyShutdown();
+                $p_param->finishLauncher();
                 return null;
             }
             $p_param->order_action_current = $order_action;
