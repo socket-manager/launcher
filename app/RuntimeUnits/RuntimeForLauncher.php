@@ -431,7 +431,7 @@ class RuntimeForLauncher implements IEntryUnits
 
             // メッセージ出力
             $msg = __('launcher.NOTICE_RUNNING_SERVICE', ['service' => $name]);
-            $p_param->logWriter('notice', ['type' => 'operator-'.$p_param->order_action_current['action'], 'message' => $msg, 'via' => $p_param->order_action_current['via'], 'who' => null, 'pid' => $p_param->service_list_current[$i]['pid']]);
+            $p_param->logWriter('notice', ['type' => $p_param->order_action_current['action'], 'message' => $msg, 'via' => $p_param->order_action_current['via'], 'who' => null, 'pid' => $p_param->service_list_current[$i]['pid']]);
 
 finish_explore_for_start:
             // 終了判定
@@ -531,7 +531,7 @@ finish_explore_for_start:
             {
                 // メッセージ出力
                 $msg = __('launcher.INFO_STARTED_SERVICE', ['service' => $p_param->service_list_current[$i]['name']]);
-                $p_param->logWriter('info', ['type' => 'operator-'.$p_param->order_action_current['action'], 'message' => $msg, 'via' => $p_param->order_action_current['via'], 'who' => null, 'pid' => $p_param->service_list_current[$i]['pid']]);
+                $p_param->logWriter('info', ['type' => $p_param->order_action_current['action'], 'message' => $msg, 'via' => $p_param->order_action_current['via'], 'who' => null, 'pid' => $p_param->service_list_current[$i]['pid']]);
             }
 
             // 終了判定
@@ -596,7 +596,7 @@ finish_explore_for_start:
 
             // メッセージ出力
             $msg = __('launcher.NOTICE_STOPPING_SERVICE', ['service' => $name]);
-            $p_param->logWriter('notice', ['type' => 'operator-'.$p_param->order_action_current['action'], 'message' => $msg, 'via' => $p_param->order_action_current['via'], 'who' => null, 'pid' => $p_param->service_list_current[$i]['pid']]);
+            $p_param->logWriter('notice', ['type' => $p_param->order_action_current['action'], 'message' => $msg, 'via' => $p_param->order_action_current['via'], 'who' => null, 'pid' => $p_param->service_list_current[$i]['pid']]);
 
             // 終了判定
             if(++$p_param->idx_process >= $p_param->max_process)
@@ -704,7 +704,7 @@ finish_explore_for_start:
                 }
             }
 
-            $p_param->logWriter($level, ['type' => 'operator-'.$p_param->order_action_current['action'], 'message' => $msg, 'via' => $p_param->order_action_current['via'], 'who' => null, 'pid' => $log_pid]);
+            $p_param->logWriter($level, ['type' => $p_param->order_action_current['action'], 'message' => $msg, 'via' => $p_param->order_action_current['via'], 'who' => null, 'pid' => $log_pid]);
 
             // 終了判定
             if(++$p_param->idx_process >= $p_param->max_process)
@@ -1086,7 +1086,7 @@ finish_for_windows_cpuinfo:
 
             // メッセージ出力
             $msg = __('launcher.NOTICE_RUNNING_SERVICE', ['service' => $name]);
-            $p_param->logWriter('notice', ['type' => 'operator-'.$p_param->order_action_current['action'], 'message' => $msg, 'via' => $p_param->order_action_current['via'], 'who' => null, 'pid' => $p_param->service_list_current[$i]['pid']]);
+            $p_param->logWriter('notice', ['type' => $p_param->order_action_current['action'], 'message' => $msg, 'via' => $p_param->order_action_current['via'], 'who' => null, 'pid' => $p_param->service_list_current[$i]['pid']]);
 
 finish_explore_for_linux_starting:
 
@@ -1133,7 +1133,7 @@ finish_explore_for_linux_starting:
             {
                 // メッセージ出力
                 $msg = __('launcher.ERROR_STARTED_SERVICE_FAILED', ['service' => $p_param->order_action_current['name']]);
-                $p_param->logWriter('error', ['type' => 'operator-'.$p_param->order_action_current['action'], 'message' => $msg, 'via' => $p_param->order_action_current['via'], 'who' => null, 'pid' => null]);
+                $p_param->logWriter('error', ['type' => $p_param->order_action_current['action'], 'message' => $msg, 'via' => $p_param->order_action_current['via'], 'who' => null, 'pid' => null]);
                 goto finish_process_for_linux_start;
             }
             else
@@ -1164,7 +1164,7 @@ finish_explore_for_linux_starting:
                 {
                     // メッセージ出力
                     $msg = __('launcher.WARNING_CPU_ASSIGNMENT_FAILED', ['service' => $p_param->service_list_current[$i]['name']]);
-                    $p_param->logWriter('warning', ['type' => 'operator-'.$p_param->order_action_current['action'], 'message' => $msg, 'via' => $p_param->order_action_current['via'], 'who' => null, 'pid' => $p_param->service_list_current[$i]['pid']]);
+                    $p_param->logWriter('warning', ['type' => $p_param->order_action_current['action'], 'message' => $msg, 'via' => $p_param->order_action_current['via'], 'who' => null, 'pid' => $p_param->service_list_current[$i]['pid']]);
                 }
             }
 
@@ -1188,7 +1188,7 @@ finish_explore_for_linux_starting:
             {
                 // メッセージ出力
                 $msg = __('launcher.INFO_STARTED_SERVICE', ['service' => $p_param->service_list_current[$i]['name']]);
-                $p_param->logWriter('info', ['type' => 'operator-'.$p_param->order_action_current['action'], 'message' => $msg, 'via' => $p_param->order_action_current['via'], 'who' => null, 'pid' => $p_param->service_list_current[$i]['pid']]);
+                $p_param->logWriter('info', ['type' => $p_param->order_action_current['action'], 'message' => $msg, 'via' => $p_param->order_action_current['via'], 'who' => null, 'pid' => $p_param->service_list_current[$i]['pid']]);
             }
 
 finish_process_for_linux_start:
@@ -1255,7 +1255,7 @@ finish_process_for_linux_start:
 
             // メッセージ出力
             $msg = __('launcher.NOTICE_STOPPING_SERVICE', ['service' => $name]);
-            $p_param->logWriter('notice', ['type' => 'operator-'.$p_param->order_action_current['action'], 'message' => $msg, 'via' => $p_param->order_action_current['via'], 'who' => null, 'pid' => $p_param->service_list_current[$i]['pid']]);
+            $p_param->logWriter('notice', ['type' => $p_param->order_action_current['action'], 'message' => $msg, 'via' => $p_param->order_action_current['via'], 'who' => null, 'pid' => $p_param->service_list_current[$i]['pid']]);
 
             // 終了判定
             if(++$p_param->idx_process >= $p_param->max_process)
@@ -1363,7 +1363,7 @@ finish_process_for_linux_start:
                 }
             }
 
-            $p_param->logWriter($level, ['type' => 'operator-'.$p_param->order_action_current['action'], 'message' => $msg, 'via' => $p_param->order_action_current['via'], 'who' => null, 'pid' => $log_pid]);
+            $p_param->logWriter($level, ['type' => $p_param->order_action_current['action'], 'message' => $msg, 'via' => $p_param->order_action_current['via'], 'who' => null, 'pid' => $log_pid]);
 
             // 終了判定
             if(++$p_param->idx_process >= $p_param->max_process)

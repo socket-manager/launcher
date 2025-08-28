@@ -69,7 +69,7 @@ class InitForWebsocket implements IInitSocketManager
         {
             if($p_level === 'debug')
             {
-                // return;@@@
+                return;
             }
             $filename = date('Ymd');
             $now = date('Y-m-d H:i:s');

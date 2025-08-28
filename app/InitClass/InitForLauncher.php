@@ -111,7 +111,7 @@ class InitForLauncher implements IInitRuntimeManager
         {
             if($p_level === 'debug')
             {
-                // return;@@@
+                return;
             }
             if(isset($p_param['type']) && isset($p_param['message']))
             {
