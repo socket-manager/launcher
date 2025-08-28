@@ -79,6 +79,13 @@ class MainForLauncher extends Console
         $auto_restart = config('launcher.auto_restart', false);
         $unit_parameter = new ParameterForLauncher($this->via, $auto_restart);
 
+        // exec関数有効確認
+        if($unit_parameter->isExecAvailable() === false)
+        {
+            $error_message = __('launcher.ERROR_EXEC_INVALID');
+            goto finish;
+        }
+        
         // 初期化クラスのインスタンスを取得
         $init_class = new InitForLauncher($this->via, $unit_parameter);
         $this->log_writer = $init_class->getLogWriter();
@@ -103,8 +110,8 @@ class MainForLauncher extends Console
         $unit_parameter->setServiceList($service_list);
 
         // ランチャーの競合チェック
-        $w_ret = $this->checkStartupLauncher($error_message);
-        if($w_ret === false)
+        $not_conflict = $this->checkStartupLauncher($error_message);
+        if($not_conflict === false)
         {
             goto finish;
         }
@@ -162,6 +169,10 @@ class MainForLauncher extends Console
 finish:
         if($error_message !== null)
         {
+            if($action === false)
+            {
+                $action = 'none-action';
+            }
             $log_writer = $this->log_writer;
             $log_writer('error', ['type' => $action, 'message' => $error_message, 'via' => 'CLI', 'who' => null, 'pid' => null]);
         }
@@ -186,15 +197,32 @@ finish:
 
             $keyword_cli = '.*worker app:cli.*';
             $keyword_gui = '.*worker app:gui.*';
-            $cmd = "powershell -Command \"Get-WmiObject Win32_Process | Where-Object { \$_.CommandLine -match '{$keyword_cli}|{$keyword_gui}' } | Select-Object ProcessId, ParentProcessId, CommandLine\"";
-            $output = [];
-            exec($cmd, $output);
-            foreach($output as $row)
+            if(PHP_OS_FAMILY === 'Windows')
             {
-                if(preg_match('/^\s*(\d+)\s+(\d+)\s+(.*)$/', $row, $matches))
+                $cmd = "powershell -Command \"Get-WmiObject Win32_Process | Where-Object { \$_.CommandLine -match '{$keyword_cli}|{$keyword_gui}' } | Select-Object ProcessId, ParentProcessId, CommandLine\"";
+                $output = [];
+                exec($cmd, $output);
+                foreach($output as $row)
                 {
-                    $match_pid = (int)$matches[1];
-                    if($pid === $match_pid)
+                    if(preg_match('/^\s*(\d+)\s+(\d+)\s+(.*)$/', $row, $matches))
+                    {
+                        $match_pid = (int)$matches[1];
+                        if($pid === $match_pid)
+                        {
+                            $p_message = __('launcher.ERROR_STARTUP_LAUNCHER');
+                            return false;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                $cmd = "ps -eo pid,cmd | grep -E 'worker app:(cli|gui)' | grep -v grep | awk '{print $1}'";
+                $output = [];
+                exec($cmd, $output);
+                foreach($output as $row)
+                {
+                    if($pid == $row)
                     {
                         $p_message = __('launcher.ERROR_STARTUP_LAUNCHER');
                         return false;

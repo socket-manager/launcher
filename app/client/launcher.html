@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Websocketテスト</title>
+
+        <link type="text/css" rel="stylesheet" href="./css/launcher.css" media="all" />
+        <script src="./js/jquery-3.7.1.min.js"></script>
+        <script src="./operator_config.js"></script>
+        <script src="./js/CustomizeImport.js"></script>
+        <script src="./js/ManagedWebsocket.js"></script>
+        <script src="./js/SocketManager.js"></script>
+    </head>
+    <body>
+        <div id="server-container"></div>
+        <div id="server-template" style="display: none;">
+            <div class="server-section" data-server-id="__ID__">
+                <div class="accordion-header">
+                    <button class="toggle-btn">▶</button>
+                    <button class="protocol-toggle-icon" data-protocol="ws" title="クリックで ws/wss 切り替え">
+                        🔓
+                    </button>
+                    <input type="text" class="host-input" placeholder="必須：例）192.168.0.10">
+                    <input type="number" class="port-input" placeholder="必須：例）8080">
+                    <input type="text" class="operator-input" placeholder="必須：例）山田　太郎">
+                    <button class="connect-btn">接続</button>
+                    <span class="connection-status status-disconnected">オフライン</span>
+                    <button class="remove-server-btn" title="このサーバーエントリを削除します">🗑 削除</button>
+                </div>
+
+                <div class="accordion-body">
+                    <div class="overlay-blocker"></div>
+                    <!-- <p>詳細情報や操作ログがここに表示されます。</p> -->
+
+                    <div class="cpu-section">
+                        <div class="cpu-header">
+                            <div class="cpu-title">CPUリソース</div>
+                            <div class="cpu-total-usage">全体稼働率: <span class="cpu-total-value">--%</span></div>
+                        </div>
+                        <div class="cpu-graph-container">
+                            <!-- <svg class="cpu-graph" width="100" height="100"></svg> -->
+                        </div>
+                    </div>
+
+                    <div class="memory-section">
+                        <div class="memory-header">
+                            <div class="memory-title">メモリリソース</div>
+                            <div class="memory-usage-label">容量: <span class="memory-usage-summary">-- GB / -- GB</span></div>
+                        </div>
+
+                        <div class="memory-bar-container">
+                            <div class="memory-bar-wrapper" data-type="physical">
+                                <div class="memory-bar-label">物理メモリ</div>
+                                <div class="memory-bar-bg">
+                                    <div class="memory-bar-fill"></div>
+                                </div>
+                                <div class="memory-bar-value">--%</div>
+                            </div>
+
+                            <div class="memory-bar-wrapper" data-type="virtual">
+                                <div class="memory-bar-label">仮想メモリ</div>
+                                <div class="memory-bar-bg">
+                                    <div class="memory-bar-fill"></div>
+                                </div>
+                                <div class="memory-bar-value">--%</div>
+                            </div>
+
+                            <div class="memory-bar-wrapper" data-type="cache">
+                                <div class="memory-bar-label">キャッシュ</div>
+                                <div class="memory-bar-bg">
+                                    <div class="memory-bar-fill"></div>
+                                </div>
+                                <div class="memory-bar-value">--%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="disk-section">
+                        <div class="disk-header">
+                            <div class="disk-title">ディスクリソース</div>
+                        </div>
+
+                        <div class="disk-bar-container">
+                            <!-- <div class="disk-bar-wrapper" data-mount="/">
+                                <div class="disk-bar-label">ルート（/）</div>
+                                <div class="disk-bar-bg">
+                                    <div class="disk-bar-fill"></div>
+                                </div>
+                                <div class="disk-bar-value">--%</div>
+                                <div class="disk-bar-usage">-- GB / -- GB</div>
+                            </div> -->
+                        </div>
+                    </div>
+
+                    <!-- サービス管理画面 -->
+                    <div class="service-manager">
+
+                        <div class="service-table-wrapper">
+
+                            <!-- 操作パネル -->
+                            <div class="service-control-panel">
+                                <button class="start-all-btn">▶ 全体起動</button>
+                                <button class="stop-all-btn">⏹ 全体停止</button>
+
+                                <select class="group-selector">
+                                    <option value="">グループ選択</option>
+                                </select>
+                                <button class="start-group-btn">▶ グループ起動</button>
+                                <button class="stop-group-btn">⏹ グループ停止</button>
+                            </div>
+
+                            <!-- サービス一覧テーブル -->
+                            <table class="service-table">
+                                <thead>
+                                    <tr>
+                                        <th>操作</th>
+                                        <th>サービス名</th>
+                                        <th>グループ</th>
+                                        <th>状態</th>
+                                        <th>CPU</th>
+                                        <th>メモリ</th>
+                                        <th>起動日時</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="service-list-body">
+                                    <!-- サービス行がここに追加される -->
+                                </tbody>
+                            </table>
+
+                            <!-- 編集フォーム（画面下部に1か所） -->
+                            <div class="service-editor" style="display: none;">
+                                <h3>サービス編集</h3>
+                                <!-- <form class="edit-form"> -->
+                                    <label>
+                                        サービス名：
+                                        <input type="text" class="edit-name" />
+                                        <span class="error-name error-msg"></span>
+                                    </label><br>
+
+                                    <label>
+                                        グループ：
+                                        <input type="text" class="edit-group" />
+                                        <span class="error-group error-msg"></span>
+                                    </label><br>
+
+                                    <label>
+                                        実行パス：
+                                        <input type="text" class="edit-path" />
+                                        <span class="error-path error-msg"></span>
+                                    </label><br>
+
+                                    <label>
+                                        コマンド：
+                                        <input type="text" class="edit-command" />
+                                        <span class="error-command error-msg"></span>
+                                    </label><br>
+
+                                    <label>
+                                        論理CPU割り当て：
+                                        <div class="cpu-selector">
+                                            <div class="cpu-mode-row">
+                                                <label><input type="radio" name="cpu-mode" value="auto" checked> 自動選択</label>
+                                                <label><input type="radio" name="cpu-mode" value="manual"> 任意選択</label>
+                                                <span class="error-cpu-mode error-msg"></span>
+                                            </div>
+
+                                            <div class="cpu-checkbox-row">
+                                                <!-- チェックボックスは動的に生成 -->
+                                            </div>
+                                        </div>
+                                    </label><br>
+
+                                    <button type="button" class="apply-edit-btn">✔ 一覧に反映</button>
+                                    <button type="button" class="cancel-edit-btn">キャンセル</button>
+                                <!-- </form> -->
+                            </div>
+
+                            <!-- フッター操作 -->
+                            <div class="service-footer">
+                                <button class="add-service-btn">＋ 新規サービス追加</button>
+                                <button class="save-config-btn">💾 設定保存</button>
+                                <button class="load-config-btn">📥 設定ロード</button>
+                                <button class="download-json-btn">⬇ JSONダウンロード</button>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="launcher-log-area">
+                        <div class="launcher-log">
+                        </div>
+                    </div>
+
+
+                    <div class="chat-area">
+                        <!-- ユーザー一覧 -->
+                        <div class="chat-users">
+                            <!-- ユーザー名入りボタン群（JSで挿入） -->
+                            <!-- 例: <button class="chat-user-btn" data-username="Ken">Ken</button> -->
+                            <!-- <button class="chat-user-btn last-sender" data-username="Ken">Ken</button>
+                            <button class="chat-user-btn last-sender" data-username="Ken">Ken</button>
+                            <button class="chat-user-btn last-sender" data-username="Ken">Ken</button>
+                            <button class="chat-user-btn last-sender" data-username="Ken">Ken</button>
+                            <button class="chat-user-btn last-sender" data-username="Ken">Ken</button>
+                            <button class="chat-user-btn last-sender" data-username="Ken">Ken</button>
+                            <button class="chat-user-btn last-sender" data-username="Ken">Ken</button>
+                            <button class="chat-user-btn last-sender" data-username="Ken">Ken</button>
+                            <button class="chat-user-btn last-sender" data-username="Ken">Ken</button>
+                            <button class="chat-user-btn last-sender" data-username="Ken">Ken</button>
+                            <button class="chat-user-btn last-sender" data-username="Ken">Ken</button>
+                            <button class="chat-user-btn last-sender" data-username="Ken">Ken</button>
+                            <button class="chat-user-btn last-sender" data-username="Ken">Ken</button>
+                            <button class="chat-user-btn last-sender" data-username="Ken">Ken</button>
+                            <button class="chat-user-btn last-sender" data-username="Ken">Ken</button>
+                            <button class="chat-user-btn last-sender" data-username="Ken">Ken</button>
+                            <button class="chat-user-btn last-sender" data-username="Ken">Ken</button>
+                            <button class="chat-user-btn last-sender" data-username="Ken">Ken</button> -->
+                        </div>
+
+                        <!-- 入力フォーム -->
+                        <div class="chat-form">
+                            <input type="text" class="chat-message-input" placeholder="メッセージを入力..." />
+                            <input type="text" class="chat-recipient" data-user-id="" placeholder="宛先" readonly />
+                            <button class="chat-send-btn">送信</button>
+                        </div>
+
+                        <!-- チャットログ表示 -->
+                        <div class="chat-log">
+                            <!-- メッセージ履歴が挿入される領域 -->
+                            <!-- 例: <div class="chat-entry"><strong>Ken:</strong> Hello!</div> -->
+                            <!-- <div class="chat-entry">2025-05-05 11:10:00 <strong>Ken:</strong> Hello!</div>
+                            <div class="chat-entry private"><strong>Hen:</strong> Follo!</div>
+                            <div class="chat-entry private sent-success">
+                                2025-05-05 11:10:00
+                                <strong>You:</strong> こんにちは！
+                                <span class="status-msg">✔ 送信成功</span>
+                            </div>
+                            <div class="chat-entry private sent-failure">
+                                <strong>You:</strong> こんにちは！こんにちは！こんにちは！こんにちは！こんにちは！こんにちは！こんにちは！こんにちは！こんにちは！こんにちは！こんにちは！
+                                <span class="status-msg">⚠ 送信失敗</span>
+                            </div>
+                            <div class="chat-entry"><strong>Ken:</strong> Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!</div>
+                            <div class="chat-entry"><strong>Ken:</strong> Hello!</div>
+                            <div class="chat-entry"><strong>Ken:</strong> Hello!</div>
+                            <div class="chat-entry"><strong>Ken:</strong> Hello!</div>
+                            <div class="chat-entry"><strong>Ken:</strong> Hello!</div> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>  <!-- server-template -->
+
+    </body>
+</html>

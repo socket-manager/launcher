@@ -1,0 +1,680 @@
+@charset "utf-8";
+
+button {
+    cursor: pointer;
+}
+
+.accordion-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #ccc;
+}
+
+.input-warning {
+  background-color: #fff3cd; /* 淡い黄（注意） */
+  border: 1px solid #ffc107; /* 黄色系の枠線 */
+  color: #856404;            /* 濃い黄（文字） */
+}
+
+.accordion-header .connect-btn {
+    flex-shrink: 0;
+}
+
+.connection-status {
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.85em;
+  font-weight: bold;
+  display: inline-block;
+  min-width: 80px;
+  text-align: center;
+}
+
+/* 状態維持系 */
+.status-disconnected {
+  background-color: #f8f9fa;
+  color: #6c757d;
+}
+
+.status-error {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.status-online {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+/* 現在進行系（統一） */
+.status-pending {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.remove-server-btn {
+    flex-shrink: 0;
+}
+
+.accordion-body {
+    display: none;
+    padding: 12px;
+    background-color: #fff;
+    border-bottom: 1px solid #ccc;
+}
+
+.connecting .host-input,
+.connecting .port-input,
+.connecting .operator-input {
+    background-color: #e0e0e0;
+    pointer-events: none;
+}
+
+.accordion-header.connecting {
+    border-left: 4px solid #4caf50;
+    background-color: #f0fff0;
+}
+
+.accordion-header.connecting .connect-btn {
+    background-color: #e53935;
+    color: white;
+}
+
+@media (max-width: 600px) {
+    .accordion-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .memory-bar-wrapper {
+        flex: 1 1 100%;
+    }
+}
+
+
+.overlay-blocker {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(240, 240, 240, 0.6);
+    z-index: 10;
+    pointer-events: auto; /* ブロックする */
+}
+
+.accordion-body {
+    position: relative;
+}
+
+
+.cpu-section {
+    margin-bottom: 24px;
+}
+
+.cpu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.cpu-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #222;
+}
+
+.cpu-total-usage {
+    font-size: 14px;
+    color: #222;
+}
+
+.cpu-total-value {
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.total-cpu-normal {
+  color: #4caf50; /* 緑：正常 */
+}
+
+.total-cpu-warn {
+  color: #fdd835; /* 黄：軽度注意 */
+}
+
+.total-cpu-alert {
+  color: #fb8c00; /* オレンジ：中度警告 */
+}
+
+.total-cpu-critical {
+  color: #e53935; /* 赤：重大警告 */
+}
+
+.cpu-graph-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px; /* グラフ間の余白 */
+}
+
+.cpu-graph-container svg {
+    border: 3px solid #555;
+}
+
+.cpu-graph-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.cpu-label {
+    text-align: center;
+}
+
+.cpu-default-color {
+    fill: #222;
+}
+
+.cpu-warn {
+    fill: #2c2a00
+}
+
+.cpu-alert {
+    fill: #331a00
+}
+
+.cpu-critical {
+    fill: #330000
+}
+
+
+.memory-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+}
+
+.memory-title {
+    font-weight: bold;
+    font-size: 16px;
+    color: #222;
+}
+
+.memory-usage-label {
+    font-size: 14px;
+    color: #222;
+}
+
+.memory-usage-summary {
+  font-size: 14px;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.memory-summary-normal {
+  color: #4caf50;
+}
+
+.memory-summary-warn {
+  color: #fdd835;
+}
+
+.memory-summary-alert {
+  color: #fb8c00;
+}
+
+.memory-summary-critical {
+  color: #e53935;
+}
+
+.memory-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.memory-bar-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: space-between;
+}
+
+.memory-bar-wrapper {
+    flex: 1 1 30%;
+    min-width: 180px;
+    max-width: 300px;
+    display: flex;
+    flex-direction: column;
+    font-size: 12px;
+    color: #000;
+}
+
+.memory-bar-label {
+    margin-bottom: 4px;
+    font-weight: bold;
+}
+
+.memory-bar-bg {
+    width: 100%;
+    height: 16px;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    position: relative;
+    overflow: hidden;
+}
+
+.memory-bar-fill {
+    height: 100%;
+    width: 0%;
+    background-color: #81c784;
+    transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.memory-bar-value {
+    margin-top: 4px;
+    text-align: right;
+}
+
+.memory-bar-usage {
+    font-size: 11px;
+    color: #444;
+    margin-top: 2px;
+    text-align: right;
+}
+
+.memory-warn {
+    background-color: #fdd835;
+}
+
+.memory-alert {
+    background-color: #fb8c00;
+}
+
+.memory-critical {
+    background-color: #e53935;
+}
+
+
+.disk-section {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 100%;
+    font-size: 12px;
+    color: #000;
+}
+
+.disk-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+}
+
+.disk-title {
+    font-weight: bold;
+    font-size: 16px;
+    color: #222;
+}
+
+.disk-usage-summary {
+    font-size: 12px;
+    color: #555;
+}
+
+.disk-bar-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: space-between;
+}
+
+.disk-bar-wrapper {
+    flex: 1 1 30%;
+    min-width: 180px;
+    max-width: 300px;
+    display: flex;
+    flex-direction: column;
+}
+
+.disk-bar-label {
+    margin-bottom: 4px;
+    font-weight: bold;
+}
+
+.disk-bar-bg {
+    width: 100%;
+    height: 16px;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    position: relative;
+    overflow: hidden;
+}
+
+.disk-bar-fill {
+    height: 100%;
+    width: 0%;
+    background-color: #81c784;
+    transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.disk-bar-value,
+.disk-bar-usage {
+    margin-top: 4px;
+    text-align: right;
+}
+
+.disk-inactive {
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+.disk-warn {
+    background-color: #fdd835;
+}
+
+.disk-alert {
+    background-color: #fb8c00;
+}
+
+.disk-critical {
+    background-color: #e53935;
+}
+
+
+.service-control-panel {
+    margin-top: 10px;
+}
+
+.group-selector {
+    margin-left: 10px;
+}
+
+.service-table {
+    margin-top: 2px;
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #f8f9fa; /* テーブル全体の背景 */
+    font-size: 0.95em;
+}
+
+.service-table th {
+    background-color: #343a40; /* ヘッダー背景 */
+    color: #ffffff;            /* ヘッダー文字色 */
+    padding: 8px;
+    text-align: left;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.service-table td {
+    padding: 8px;
+    border-bottom: 1px solid #dee2e6; /* 行罫線 */
+}
+
+.service-table tr:hover {
+    background-color: #e9f5ff; /* ホバー時の背景色 */
+}
+
+/* 状態別の背景色 */
+.service-table td.status-running {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.service-table td.status-stopped {
+    background-color: #f8f8f8;
+    color: #666;
+}
+
+.service-table td.status-operation {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.service-table td.status-abnormality {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.service-list-cpu {
+    text-align: right;
+}
+
+.service-warn {
+    background-color: #FFCCCC;
+}
+
+.service-alert {
+    background-color: #FFBBBB;
+}
+
+.service-critical {
+    background-color: #FFAAAA;
+}
+
+.service-list-memory {
+    text-align: right;
+}
+
+.service-table td button {
+    width: 28px;
+    height: 28px;
+}
+
+.cpu-checkbox-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.cpu-checkbox-row label {
+    flex: 0 0 auto;
+    white-space: nowrap;
+}
+
+.cpu-checkbox-row.disabled label {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.cpu-mode-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.error-msg {
+    color: #dc3545;
+}
+
+.service-table-wrapper {
+    position: relative;
+}
+
+.service-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(240, 240, 240, 0.6);
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: all;
+}
+
+.service-overlay .overlay-text {
+    font-size: 16px;
+    color: #333;
+    background: #fff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 6px rgba(0,0,0,0.2);
+}
+
+.overlay-dialog {
+    background: #fff;
+    padding: 20px 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.3);
+    text-align: center;
+}
+
+.overlay-message {
+    font-size: 16px;
+    margin-bottom: 16px;
+}
+
+.overlay-buttons button {
+    margin: 0 10px;
+    padding: 6px 14px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+
+.launcher-log {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 8px;
+    background-color: #f9f9f9;
+    max-height: 300px; /* 高さ制限 */
+    overflow-y: auto;  /* 縦スクロール */
+    font-family: monospace;
+    margin-top: 10px;
+}
+
+.log-entry {
+    font-size: 0.85em;
+    padding: 2px 4px;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 4px;
+}
+
+.log-info {
+    background-color: #e7f3fe;
+    color: #31708f;
+}
+
+.log-notice {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.log-error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.log-timestamp, .log-level, .log-type, .log-meta {
+    margin-right: 6px;
+    font-weight: bold;
+}
+
+
+.chat-area {
+    margin-top: 10px;
+    border-top: 1px solid #ccc;
+    padding-top: 8px;
+    font-size: 14px;
+}
+
+.chat-users {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 6px;
+}
+
+.chat-user-btn {
+    padding: 4px 8px;
+    background-color: #e0e0e0;
+    border: 1px solid #ccc;
+}
+
+.chat-user-btn.disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.chat-user-btn.last-sender {
+    background-color: #28A745 !important;
+}
+
+.chat-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.chat-message-input {
+    flex: 2;
+}
+.chat-recipient {
+    flex: 1;
+    background-color: #f9f9f9;
+}
+.chat-send-btn {
+    flex-shrink: 0;
+}
+
+.chat-log {
+    max-height: 160px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    padding: 6px;
+    background-color: #fff;
+}
+
+.chat-entry {
+    margin-bottom: 4px;
+}
+
+.chat-entry.private {
+    background-color: #fff8e1; /* 柔らかい黄色系で目立たせる */
+    border-left: 4px solid #ff9800; /* 明示的な帯で注意喚起 */
+    padding: 6px;
+    margin-bottom: 6px;
+}
+
+.chat-entry.private strong {
+    color: #d84315; /* 宛先ユーザー名の色を強調 */
+}
+
+.chat-entry.private::before {
+    content: "📨 ";
+    color: #ff5722;
+}
+
+.chat-entry.private.sent-success {
+    background-color: #e8f5e9;
+    border-left: 4px solid #4caf50;
+}
+
+.chat-entry.private.sent-failure {
+    background-color: #ffebee;
+    border-left: 4px solid #f44336;
+}
+
+strong.other-message {
+    color: #5555FF;
+}
+
+strong.admin-message {
+    color: #FF8800;
+}
+
+.status-msg {
+    float: right;
+    font-size: 0.85em;
+    color: #777;
+    padding-left: 8px;
+}

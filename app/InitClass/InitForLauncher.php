@@ -111,18 +111,28 @@ class InitForLauncher implements IInitRuntimeManager
         {
             if($p_level === 'debug')
             {
-                return;
+                // return;@@@
             }
             if(isset($p_param['type']) && isset($p_param['message']))
             {
                 $filename = date($this->log_cycle);
                 $timestamp = date('Y-m-d H:i:s');
+                if($p_param['pid'] === null)
+                {
+                    $p_param['pid'] = 'ー';
+                }
                 $add_item = 
                 [
                     'timestamp' => $timestamp,
                     'level' => $p_level
                 ];
                 $all_item = array_merge($add_item, $p_param);
+
+                if($this->unit_parameter->cli_flg === false)
+                {
+                    $this->unit_parameter->param_websocket->noticeLauncherLog($all_item);
+                }
+
                 $log = json_encode($all_item)."\n";
                 error_log($log, 3, "{$this->log_path_for_launcher}/{$filename}.log");
 

@@ -80,6 +80,11 @@ enum LauncherAction: string
      */
     case DETECT_STOP = 'detect-stop';
 
+    /**
+     * @var GUI起動
+     */
+    case GUI_START = 'gui-start';
+
 };
 
 /**
@@ -117,7 +122,7 @@ class ParameterForLauncher extends RuntimeManagerParameter
      * - via            経由（CLI、GUIなど）
      * - who            一人称
      */
-    private array $order_action_stack = [];
+    public array $order_action_stack = [];
 
     /**
      * @var array $order_action_current 処理中のオーダーアクション
@@ -159,6 +164,11 @@ class ParameterForLauncher extends RuntimeManagerParameter
      */
     public string $pid_path_for_service = '';
 
+    /**
+     * @var ParameterForWebsocket $param_websocket WebsocketサーバーのUNITパラメータクラス
+     */
+    public ParameterForWebsocket $param_websocket;
+
 
     //--------------------------------------------------------------------------
     // メソッド
@@ -172,7 +182,7 @@ class ParameterForLauncher extends RuntimeManagerParameter
      * @param ?array $p_service_list サービスリスト
      * @param ?string $p_lang 言語コード
      */
-    public function __construct(string $p_via, bool $p_auto_restart, ?array $p_service_list = null, ?string $p_lang = null)
+    public function __construct(string $p_via, bool $p_auto_restart, ?string $p_lang = null)
     {
         parent::__construct($p_lang);
 
@@ -189,13 +199,52 @@ class ParameterForLauncher extends RuntimeManagerParameter
         // 自動再起動フラグの設定
         $this->auto_restart = $p_auto_restart;
 
-        // サービスリストの設定
-        $this->setServiceList($p_service_list);
+        // コア数取得
+        $this->getEnteringCoreCount();
     }
 
     /**
      * プロパティセッター
      */
+
+    /**
+     * コア数取得
+     * 
+     */
+    protected function getEnteringCoreCount()
+    {
+        if(PHP_OS_FAMILY === 'Windows')
+        {
+            // コア数取得のコマンド文を生成
+            $command = __DIR__."/../bin/corecounter.exe";
+
+            // コマンド実行
+            $output = [];
+            exec($command, $output, $result);
+            $this->max_mask = $result;
+            $cnt = 0;
+            while($result)
+            {
+                $cnt += $result & 1;
+                $result >>= 1;
+            }
+            $this->max_core = $cnt;
+        }
+        else
+        {
+            if(is_readable('/proc/cpuinfo'))
+            {
+                $lines = file('/proc/cpuinfo');
+                $this->max_core = count(array_filter($lines, fn($line) => strpos($line, 'processor') === 0));
+            }
+
+            $output = [];
+            $return_var = 0;
+            exec('nproc', $output, $return_var);
+
+            $this->max_core = (int)$output[0];
+        }
+    }
 
     /**
      * サービスリストの設定
@@ -204,6 +253,14 @@ class ParameterForLauncher extends RuntimeManagerParameter
      */
     public function setServiceList(?array $p_service_list)
     {
+        if($this->cli_flg === false)
+        {
+            if($p_service_list === [])
+            {
+                $this->param_websocket->service_list = [];
+            }
+        }
+
         if($p_service_list !== null)
         {
             $this->service_list_all = $p_service_list;
@@ -252,6 +309,7 @@ class ParameterForLauncher extends RuntimeManagerParameter
                     goto fail;
                 }
             case LauncherAction::CPU_INFO->value:
+            case LauncherAction::GUI_START->value:
                 goto succeed;
             default:
                 break;
@@ -355,6 +413,7 @@ fail:
             &&  $p_action !== LauncherAction::RESTART_ALL->value
             &&  $p_action !== LauncherAction::STATUS_ALL->value
             &&  $p_action !== LauncherAction::CPU_INFO->value
+            &&  $p_action !== LauncherAction::GUI_START->value
         )
         {
             $w_ret = $this->checkService($p_service, $service_key, $service_name, $p_message);
@@ -508,12 +567,40 @@ fail:
      * @param bool $p_bold 太字設定
      * @return string 色設定後のテキスト
      */
-    public function colorText(string $p_text, int $p_fg = 32, ?int $p_bg = null, bool $p_bold = false) {
+    public function colorText(string $p_text, int $p_fg = 32, ?int $p_bg = null, bool $p_bold = false)
+    {
         $seq = "\033[" . ($p_bold ? "1;" : "") . $p_fg;
         if($p_bg !== null)
         {
             $seq .= ";" . $p_bg;
         }
         return $seq . "m" . $p_text . "\033[0m";
+    }
+
+    /**
+     * WebsocketサーバーのUNITパラメータクラスの設定
+     * 
+     * @param ParameterForWebsocket $p_param WebsocketサーバーのUNITパラメータクラス
+     */
+    public function setParameterWebsocket(ParameterForWebsocket $p_param)
+    {
+        $this->param_websocket = $p_param;
+        return;
+    }
+
+    /**
+     * exec関数の有効確認
+     * 
+     * @return bool true（有効） or false（無効）
+     */
+    public function isExecAvailable(): bool
+    {
+        if(!function_exists('exec'))
+        {
+            return false;
+        }
+
+        $disabled = explode(',', ini_get('disable_functions'));
+        return !in_array('exec', array_map('trim', $disabled));
     }
 }

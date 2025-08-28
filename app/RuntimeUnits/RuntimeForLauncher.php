@@ -192,7 +192,7 @@ class RuntimeForLauncher implements IEntryUnits
 
             // オーダーアクションの取得
             $order_action = $p_param->getOrderAction();
-            if($order_action === null)
+            if($order_action === null || $p_param->service_list_all === [])
             {
                 $p_param->order_action_current = null;
                 $p_param->finishLauncher();
@@ -345,6 +345,12 @@ class RuntimeForLauncher implements IEntryUnits
             {
                 $next_status = RuntimeStatusEnumForLauncher::CPU_INFO->value;
             }
+            else
+            if($p_param->order_action_current['action'] === LauncherAction::GUI_START->value)
+            {
+                $p_param->service_list_current = $p_param->service_list_all;
+                $next_status = RuntimeStatusEnumForLauncher::EXPLORE_STATUS->value;
+            }
 
             // 処理中プロセス指標の初期化
             $p_param->max_process = count($p_param->service_list_current);
@@ -395,6 +401,7 @@ class RuntimeForLauncher implements IEntryUnits
                         if($p_param->service_list_all[$j]['name'] === $name)
                         {
                             $p_param->service_list_all[$j]['pid'] = $pid;
+                            $p_param->service_list_all[$j]['timestamp'] = date("Y-m-d H:i:s", filemtime($pid_file));
                         }
                     }
                 }
@@ -481,12 +488,14 @@ finish_explore_for_start:
             exec($shell_command, $output);
             $pid = trim($output[0] ?? '');
             $p_param->service_list_current[$i]['pid'] = $pid;
+            $p_param->service_list_current[$i]['timestamp'] = date('Y-m-d H:i:s');
             $max = count($p_param->service_list_all);
             for($j = 0; $j < $max; $j++)
             {
                 if($p_param->service_list_all[$j]['name'] === $p_param->service_list_current[$i]['name'])
                 {
                     $p_param->service_list_all[$j]['pid'] = $pid;
+                    $p_param->service_list_all[$j]['timestamp'] = $p_param->service_list_current[$i]['timestamp'];
                 }
             }
             file_put_contents("./pids/{$p_param->service_list_current[$i]['name']}", $pid);
@@ -912,10 +921,17 @@ finish_explore_for_windows_status:
                 ]);
             }
             printf($msg."\n");
+            $p_param->service_list_current[$i]['memory'] = $memory;
 
             // 終了判定
             if(++$p_param->idx_process >= $p_param->max_process)
             {
+                if($p_param->cli_flg === false)
+                {
+                    $p_param->service_list_all = $p_param->service_list_current;
+                    $p_param->param_websocket->service_list = $p_param->service_list_current;
+                }
+
                 $p_param->logWriter('debug', ['プロセスリスト by MEMORY_CHECK' => print_r($p_param->service_list_current, true)]);
                 return $p_param->getIdlingStatus($p_param->order_action_current);
             }
@@ -1040,6 +1056,7 @@ finish_for_windows_cpuinfo:
                         if($p_param->service_list_all[$j]['name'] === $name)
                         {
                             $p_param->service_list_all[$j]['pid'] = $pid;
+                            $p_param->service_list_all[$j]['timestamp'] = date("Y-m-d H:i:s", filemtime($pid_file));
                         }
                     }
                 }
@@ -1122,6 +1139,7 @@ finish_explore_for_linux_starting:
             else
             {
                 $p_param->service_list_current[$i]['pid'] = (int)trim($output[0]);
+                $p_param->service_list_current[$i]['timestamp'] = date('Y-m-d H:i:s');
             }
             file_put_contents("./pids/{$p_param->service_list_current[$i]['name']}", $p_param->service_list_current[$i]['pid']);
 
@@ -1156,6 +1174,7 @@ finish_explore_for_linux_starting:
                 if($p_param->service_list_all[$j]['name'] === $name)
                 {
                     $p_param->service_list_all[$j]['pid'] = $p_param->service_list_current[$i]['pid'];
+                    $p_param->service_list_all[$j]['timestamp'] = $p_param->service_list_current[$i]['timestamp'];
                 }
             }
 
@@ -1552,10 +1571,17 @@ finish_explore_for_linux_status:
                 ]);
             }
             printf($msg."\n");
+            $p_param->service_list_current[$i]['memory'] = $memory;
 
             // 終了判定
             if(++$p_param->idx_process >= $p_param->max_process)
             {
+                if($p_param->cli_flg === false)
+                {
+                    $p_param->service_list_all = $p_param->service_list_current;
+                    $p_param->param_websocket->service_list = $p_param->service_list_current;
+                }
+
                 $p_param->logWriter('debug', ['プロセスリスト by MEMORY_CHECK' => print_r($p_param->service_list_current, true)]);
                 return $p_param->getIdlingStatus($p_param->order_action_current);
             }
