@@ -32,7 +32,6 @@
 
                 <div class="accordion-body">
                     <div class="overlay-blocker"></div>
-                    <!-- <p>詳細情報や操作ログがここに表示されます。</p> -->
 
                     <div class="cpu-section">
                         <div class="cpu-header">
@@ -40,7 +39,6 @@
                             <div class="cpu-total-usage">全体稼働率: <span class="cpu-total-value">--%</span></div>
                         </div>
                         <div class="cpu-graph-container">
-                            <!-- <svg class="cpu-graph" width="100" height="100"></svg> -->
                         </div>
                     </div>
 
@@ -83,14 +81,6 @@
                         </div>
 
                         <div class="disk-bar-container">
-                            <!-- <div class="disk-bar-wrapper" data-mount="/">
-                                <div class="disk-bar-label">ルート（/）</div>
-                                <div class="disk-bar-bg">
-                                    <div class="disk-bar-fill"></div>
-                                </div>
-                                <div class="disk-bar-value">--%</div>
-                                <div class="disk-bar-usage">-- GB / -- GB</div>
-                            </div> -->
                         </div>
                     </div>
 
@@ -125,56 +115,52 @@
                                     </tr>
                                 </thead>
                                 <tbody class="service-list-body">
-                                    <!-- サービス行がここに追加される -->
                                 </tbody>
                             </table>
 
                             <!-- 編集フォーム（画面下部に1か所） -->
                             <div class="service-editor" style="display: none;">
                                 <h3>サービス編集</h3>
-                                <!-- <form class="edit-form"> -->
-                                    <label>
-                                        サービス名：
-                                        <input type="text" class="edit-name" />
-                                        <span class="error-name error-msg"></span>
-                                    </label><br>
+                                <label>
+                                    サービス名：
+                                    <input type="text" class="edit-name" />
+                                    <span class="error-name error-msg"></span>
+                                </label><br>
 
-                                    <label>
-                                        グループ：
-                                        <input type="text" class="edit-group" />
-                                        <span class="error-group error-msg"></span>
-                                    </label><br>
+                                <label>
+                                    グループ：
+                                    <input type="text" class="edit-group" />
+                                    <span class="error-group error-msg"></span>
+                                </label><br>
 
-                                    <label>
-                                        実行パス：
-                                        <input type="text" class="edit-path" />
-                                        <span class="error-path error-msg"></span>
-                                    </label><br>
+                                <label>
+                                    実行パス：
+                                    <input type="text" class="edit-path" />
+                                    <span class="error-path error-msg"></span>
+                                </label><br>
 
-                                    <label>
-                                        コマンド：
-                                        <input type="text" class="edit-command" />
-                                        <span class="error-command error-msg"></span>
-                                    </label><br>
+                                <label>
+                                    コマンド：
+                                    <input type="text" class="edit-command" />
+                                    <span class="error-command error-msg"></span>
+                                </label><br>
 
-                                    <label>
-                                        論理CPU割り当て：
-                                        <div class="cpu-selector">
-                                            <div class="cpu-mode-row">
-                                                <label><input type="radio" name="cpu-mode" value="auto" checked> 自動選択</label>
-                                                <label><input type="radio" name="cpu-mode" value="manual"> 任意選択</label>
-                                                <span class="error-cpu-mode error-msg"></span>
-                                            </div>
-
-                                            <div class="cpu-checkbox-row">
-                                                <!-- チェックボックスは動的に生成 -->
-                                            </div>
+                                <label>
+                                    論理CPU割り当て：
+                                    <div class="cpu-selector">
+                                        <div class="cpu-mode-row">
+                                            <label><input type="radio" name="cpu-mode" value="auto" checked> 自動選択</label>
+                                            <label><input type="radio" name="cpu-mode" value="manual"> 任意選択</label>
+                                            <span class="error-cpu-mode error-msg"></span>
                                         </div>
-                                    </label><br>
 
-                                    <button type="button" class="apply-edit-btn">✔ 一覧に反映</button>
-                                    <button type="button" class="cancel-edit-btn">キャンセル</button>
-                                <!-- </form> -->
+                                        <div class="cpu-checkbox-row">
+                                        </div>
+                                    </div>
+                                </label><br>
+
+                                <button type="button" class="apply-edit-btn">✔ 一覧に反映</button>
+                                <button type="button" class="cancel-edit-btn">キャンセル</button>
                             </div>
 
                             <!-- フッター操作 -->
@@ -197,26 +183,6 @@
                     <div class="chat-area">
                         <!-- ユーザー一覧 -->
                         <div class="chat-users">
-                            <!-- ユーザー名入りボタン群（JSで挿入） -->
-                            <!-- 例: <button class="chat-user-btn" data-username="Ken">Ken</button> -->
-                            <!-- <button class="chat-user-btn last-sender" data-username="Ken">Ken</button>
-                            <button class="chat-user-btn last-sender" data-username="Ken">Ken</button>
-                            <button class="chat-user-btn last-sender" data-username="Ken">Ken</button>
-                            <button class="chat-user-btn last-sender" data-username="Ken">Ken</button>
-                            <button class="chat-user-btn last-sender" data-username="Ken">Ken</button>
-                            <button class="chat-user-btn last-sender" data-username="Ken">Ken</button>
-                            <button class="chat-user-btn last-sender" data-username="Ken">Ken</button>
-                            <button class="chat-user-btn last-sender" data-username="Ken">Ken</button>
-                            <button class="chat-user-btn last-sender" data-username="Ken">Ken</button>
-                            <button class="chat-user-btn last-sender" data-username="Ken">Ken</button>
-                            <button class="chat-user-btn last-sender" data-username="Ken">Ken</button>
-                            <button class="chat-user-btn last-sender" data-username="Ken">Ken</button>
-                            <button class="chat-user-btn last-sender" data-username="Ken">Ken</button>
-                            <button class="chat-user-btn last-sender" data-username="Ken">Ken</button>
-                            <button class="chat-user-btn last-sender" data-username="Ken">Ken</button>
-                            <button class="chat-user-btn last-sender" data-username="Ken">Ken</button>
-                            <button class="chat-user-btn last-sender" data-username="Ken">Ken</button>
-                            <button class="chat-user-btn last-sender" data-username="Ken">Ken</button> -->
                         </div>
 
                         <!-- 入力フォーム -->
@@ -228,24 +194,6 @@
 
                         <!-- チャットログ表示 -->
                         <div class="chat-log">
-                            <!-- メッセージ履歴が挿入される領域 -->
-                            <!-- 例: <div class="chat-entry"><strong>Ken:</strong> Hello!</div> -->
-                            <!-- <div class="chat-entry">2025-05-05 11:10:00 <strong>Ken:</strong> Hello!</div>
-                            <div class="chat-entry private"><strong>Hen:</strong> Follo!</div>
-                            <div class="chat-entry private sent-success">
-                                2025-05-05 11:10:00
-                                <strong>You:</strong> こんにちは！
-                                <span class="status-msg">✔ 送信成功</span>
-                            </div>
-                            <div class="chat-entry private sent-failure">
-                                <strong>You:</strong> こんにちは！こんにちは！こんにちは！こんにちは！こんにちは！こんにちは！こんにちは！こんにちは！こんにちは！こんにちは！こんにちは！
-                                <span class="status-msg">⚠ 送信失敗</span>
-                            </div>
-                            <div class="chat-entry"><strong>Ken:</strong> Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!!Hello!Hello!Hello!Hello!Hello!Hello!Hello!Hello!</div>
-                            <div class="chat-entry"><strong>Ken:</strong> Hello!</div>
-                            <div class="chat-entry"><strong>Ken:</strong> Hello!</div>
-                            <div class="chat-entry"><strong>Ken:</strong> Hello!</div>
-                            <div class="chat-entry"><strong>Ken:</strong> Hello!</div> -->
                         </div>
                     </div>
                 </div>
