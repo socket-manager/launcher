@@ -385,6 +385,18 @@ button {
     background-color: #e53935;
 }
 
+.disk-usage-warn {
+    color: #fdd835;
+}
+
+.disk-usage-alert {
+    color: #fb8c00;
+}
+
+.disk-usage-critical {
+    color: #e53935;
+}
+
 
 .service-control-panel {
     margin-top: 10px;

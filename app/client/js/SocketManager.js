@@ -428,6 +428,10 @@
         {
             $wrapper.addClass('disk-inactive');
         }
+
+        $wrapper.find('.disk-bar-usage')
+            .removeClass('disk-usage-warn disk-usage-alert disk-usage-critical')
+            .addClass(`disk-usage-${p_color}`);
     }
 
     const SocketManager = {};
