@@ -210,6 +210,7 @@ class ParameterForWebsocket extends SocketManagerParameter
     /**
      * コンストラクタ
      * 
+     * @param int $p_cycle_interval 周期インターバル（μs）
      * @param ?bool $p_tls TLSフラグ
      */
     public function __construct(int $p_cycle_interval, ?bool $p_tls = null)

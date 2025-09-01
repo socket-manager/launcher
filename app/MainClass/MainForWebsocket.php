@@ -330,32 +330,6 @@ finish:
         $pid = getmypid();
         file_put_contents($this->pid_path_for_launcher, (string)$pid);
         return true;
-
-        // if(file_exists($this->pid_path_for_launcher))
-        // {
-        //     $pid = (int)file_get_contents($this->pid_path_for_launcher);
-
-        //     $keyword_cli = '.*worker app:cli.*';
-        //     $keyword_gui = '.*worker app:gui.*';
-        //     $cmd = "powershell -Command \"Get-WmiObject Win32_Process | Where-Object { \$_.CommandLine -match '{$keyword_cli}|{$keyword_gui}' } | Select-Object ProcessId, ParentProcessId, CommandLine\"";
-        //     $output = [];
-        //     exec($cmd, $output);
-        //     foreach($output as $row)
-        //     {
-        //         if(preg_match('/^\s*(\d+)\s+(\d+)\s+(.*)$/', $row, $matches))
-        //         {
-        //             $match_pid = (int)$matches[1];
-        //             if($pid === $match_pid)
-        //             {
-        //                 $p_message = __('launcher.ERROR_STARTUP_LAUNCHER');
-        //                 return false;
-        //             }
-        //         }
-        //     }
-        // }
-        // $pid = getmypid();
-        // file_put_contents($this->pid_path_for_launcher, (string)$pid);
-        // return true;
     }
 
 }
