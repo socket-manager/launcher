@@ -261,6 +261,11 @@ class MainForWebsocket extends Console
             {
                 goto finish;
             }
+
+            if(!file_exists($this->pid_path_for_launcher))
+            {
+                goto finish;
+            }
         }
 
 finish:

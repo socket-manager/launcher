@@ -14,6 +14,7 @@ stopall
 status <サービス名> or <group:グループ名>
 statusall
 cpuinfo
+shutdown
 EOS,
     'WARNING_CPU_ASSIGNMENT_FAILED' => ':service サービスのCPU割り当てに失敗しました。',
 
@@ -33,6 +34,8 @@ EOS,
     'NOTICE_STOPPING_SERVICE' => ':service サービスは停止中です。',
     'NOTICE_NOT_FOUND_SERVICE' => ':service サービスは既に存在していません。',
     'NOTICE_AUTO_RESTART' => ':service サービスを自動再起動しました。',
+    'NOTICE_LAUNCHER_SHUTDOWN' => 'ランチャーを終了しました。',
+    'NOTICE_NO_RUNNING_LAUNCHER' => '起動中のランチャーはありません。',
 
     'STATUS_LIST' => ':service => 状態[:status] CPU[:cpu%%] MEM[:memory%%] 起動時間[:timestamp] PID[:pid]',
     'STATUS_DETAIL' => <<<EOS

@@ -137,6 +137,9 @@ GUIモード時は start/stop 系アクションのボタンを使って操作�
 - cpuinfo  
   稼働中物理サーバーのCPU構成を表示（論理CPU割当用の参照情報）
 
+- shutdown  
+  GUI モードや CLI モードに関係なく、foreground か background で動作中のランチャーを終了する
+
 ※ group の設定はサービス設定ファイル内で行います。GUIモード時は画面で設定できます。
 
 ---
@@ -162,6 +165,7 @@ stopall
 status <サービス名> or <group:グループ名>
 statusall
 cpuinfo
+shutdown
 ```
 
 <br />
@@ -172,7 +176,7 @@ GUI モードで確認する時は以下のコマンドを入力してくださ�
 > php worker app:gui
 ```
 
-コマンド実行後 `app/client/launcher.html` のファイルをブラウザで開き、ランチャーを起動した「ホスト名（デフォルトはlocalhost）」「ポート番号（デフォルトは5000ポート）」「オペレータ名」を入力してから「接続」ボタンを押すと画面が表示されます。
+コマンド実行後 `app/client/launcher.html` のファイルをブラウザで開き、ランチャーを起動している「ホスト名（デフォルトはlocalhost）」や「ポート番号（デフォルトは5000ポート）」と「オペレータ名」を入力してから「接続」ボタンを押すと画面が表示されます。
 
 <br />
 

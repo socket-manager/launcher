@@ -12,6 +12,7 @@ use SocketManager\Library\FrameWork\Console;
 
 use App\InitClass\InitForLauncher;
 use App\RuntimeUnits\RuntimeForLauncher;
+use App\UnitParameter\LauncherAction;
 use App\UnitParameter\ParameterForLauncher;
 
 
@@ -90,6 +91,20 @@ class MainForLauncher extends Console
         $init_class = new InitForLauncher($this->via, $unit_parameter);
         $this->log_writer = $init_class->getLogWriter();
 
+        // shutdownアクション実行
+        if($action === LauncherAction::SHUTDOWN->value)
+        {
+            if(file_exists($this->pid_path_for_launcher))
+            {
+                $error_message = __('launcher.NOTICE_LAUNCHER_SHUTDOWN');
+            }
+            else
+            {
+                $error_message = __('launcher.NOTICE_NO_RUNNING_LAUNCHER');
+            }
+            goto finish;
+        }
+
         // サービス構成ファイルの取得
         $service_json = '';
         $service_file = config('launcher.services_path');
@@ -164,17 +179,28 @@ class MainForLauncher extends Console
             {
                 goto finish;
             }
+
+            if(!file_exists($this->pid_path_for_launcher))
+            {
+                goto finish;
+            }
         }
 
 finish:
         if($error_message !== null)
         {
+            $level = 'error';
             if($action === false)
             {
                 $action = 'none-action';
             }
+            else
+            if($action === LauncherAction::SHUTDOWN->value)
+            {
+                $level = 'notice';
+            }
             $log_writer = $this->log_writer;
-            $log_writer('error', ['type' => $action, 'message' => $error_message, 'via' => 'CLI', 'who' => null, 'pid' => null]);
+            $log_writer($level, ['type' => $action, 'message' => $error_message, 'via' => 'CLI', 'who' => null, 'pid' => null]);
         }
         if(file_exists($this->pid_path_for_launcher))
         {
