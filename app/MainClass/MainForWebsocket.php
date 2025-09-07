@@ -15,12 +15,15 @@ use App\UnitParameter\ParameterForWebsocket;
 use App\InitClass\InitForWebsocket;
 use App\ProtocolUnits\ProtocolForWebsocket;
 use App\CommandUnits\CommandForWebsocket;
-
+use App\CommandUnits\CommandForWebsocketQueueEnum;
 use SocketManager\Library\RuntimeManager;
 use App\UnitParameter\ParameterForLauncher;
 use App\InitClass\InitForLauncher;
 use App\UnitParameter\LauncherAction;
 use App\RuntimeUnits\RuntimeForLauncher;
+use SocketManager\Library\ISimpleSocketUdp;
+use SocketManager\Library\SimpleSocketGenerator;
+use SocketManager\Library\SimpleSocketTypeEnum;
 
 
 /**
@@ -162,6 +165,45 @@ class MainForWebsocket extends Console
         $manager->setCommandUnits($entry);
 
         //--------------------------------------------------------------------------
+        // シンプルソケットの初期化
+        //--------------------------------------------------------------------------
+
+        $host = config('const.custom_monitoring.host', 'localhost');
+        $port = config('const.custom_monitoring.port', 15000);
+        $downtime = config('const.custom_monitoring.downtime', 1000);
+        $generator = new SimpleSocketGenerator(SimpleSocketTypeEnum::UDP, $host, $port, $downtime);
+        $generator->setLogWriter($init->getLogWriter());
+        $generator->setKeepRunning(function(?ISimpleSocketUdp $p_simple_socket, ParameterForWebsocket $p_param)
+        {
+            $host = $port = null;
+            $dat = $p_simple_socket->recvfrom($host, $port);
+            if($dat === null)
+            {
+                return;
+            }
+            if($p_param->service_list === null)
+            {
+                return;
+            }
+            $decode = json_decode($dat, true);
+            $command_data =
+            [
+                'cmd' => CommandForWebsocketQueueEnum::CUSTOM_PARTS->value,
+                'parts' => $decode
+            ];
+            $send_data =
+            [
+                'data' => $command_data
+            ];
+            $cids = $p_param->getConnectionIdAll();
+            foreach($cids as $cid)
+            {
+                $p_param->setSendStack($send_data, $cid);
+            }
+        }, $param);
+        $generator->generate();
+
+        //--------------------------------------------------------------------------
         // RuntimeManagerの初期化
         //--------------------------------------------------------------------------
 
@@ -262,6 +304,13 @@ class MainForWebsocket extends Console
                 goto finish;
             }
 
+            // 周期ドリブン
+            $ret = $generator->cycleDriven($this->cycle_interval);
+            if($ret === false)
+            {
+                goto finish;
+            }
+
             if(!file_exists($this->pid_path_for_launcher))
             {
                 goto finish;
@@ -271,6 +320,7 @@ class MainForWebsocket extends Console
 finish:
         // 全接続クローズ
         $manager->shutdownAll();
+        $generator->shutdownAll();
 
         if($error_message !== null)
         {

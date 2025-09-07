@@ -1,9 +1,17 @@
 const operator_config = [
+    // デモ環境のマインクラフト版チャットサーバーとの連携サンプル
     // {
-    //     host: "192.168.1.10",
-    //     port: 8080,
-    //     service: "auth",
-    //     type: "login",
-    //     label: "ログインイベント"
+    //     host: "localhost",
+    //     port: 5000,
+    //     service: "minecraft-parent",
+    //     type: "user-cnt",
+    //     label: "ユーザー数"
+    // },
+    // {
+    //     host: "localhost",
+    //     port: 5000,
+    //     service: "minecraft-parent",
+    //     type: "minecraft-cnt",
+    //     label: "マイクラユーザー数"
     // }
 ];

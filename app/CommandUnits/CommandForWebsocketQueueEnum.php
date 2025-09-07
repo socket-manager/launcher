@@ -32,4 +32,5 @@ enum CommandForWebsocketQueueEnum: string
     case ACTION_RESPONSE = 'action_response';
     case SETTING_ACTION_RESPONSE = 'setting_action_response';
     case ACTION_NOTICE = 'action_notice';
+    case CUSTOM_PARTS = 'custom_parts';
 }

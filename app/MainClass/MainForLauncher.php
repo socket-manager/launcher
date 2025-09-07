@@ -35,7 +35,7 @@ class MainForLauncher extends Console
     /**
      * @var string $description コマンド説明
      */
-    protected string $description = 'サービス管理ランチャー';
+    protected string $description = 'CLI サービス管理ランチャー';
 
     /**
      * @var string $via ランチャーモード（'CLI' or 'GUI'）

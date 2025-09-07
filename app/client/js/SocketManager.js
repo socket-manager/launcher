@@ -159,7 +159,7 @@
             if(typeof(svc.cpu) !== 'undefined')
             {
                 cpu = svc.cpu;
-                cpu_color = svc.color;
+                cpu_color = svc.cpu_color;
             }
             let memory = 'ー';
             let memory_color = '';
@@ -168,12 +168,14 @@
                 memory = svc.memory;
                 memory_color = svc.memory_color;
             }
+
             const $row = $(`
                 <tr data-index="${index}">
                     <td>
-                    <button class="start-btn">▶</button>
-                    <button class="edit-btn">✏</button>
-                    <button class="delete-btn">🗑</button>
+                        <button class="start-btn">▶</button>
+                        <button class="toggle-detail-btn" style="padding-right: 2px;">🧩</button>
+                        <button class="edit-btn">✏</button>
+                        <button class="delete-btn">🗑</button>
                     </td>
                     <td>${svc.name}</td>
                     <td>${svc.group || 'ー'}</td>
@@ -182,12 +184,21 @@
                     <td class="service-list-memory ${memory_color}">${memory}</td>
                     <td>${svc.timestamp}</td>
                 </tr>
+                <tr class="service-detail-row" style="display: none;">
+                    <td colspan="7">
+                        <div class="monitoring-panel" data-service="${svc.name}">
+                            <h4 class="monitoring-label">${svc.name} カスタムモニタリング</h4>
+                            <div class="monitoring-items">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
             `);
 
             const $status_cell = $row.find('td').eq(3); // 状態列
             const $start_btn = $row.find('button').eq(0); // 起動／停止ボタン
-            const $edit_btn = $row.find('button').eq(1); // 編集ボタン
-            const $delete_btn = $row.find('button').eq(2); // 削除ボタン
+            const $edit_btn = $row.find('button').eq(2); // 編集ボタン
+            const $delete_btn = $row.find('button').eq(3); // 削除ボタン
             if(svc.status === '起動中')
             {
                 $status_cell.addClass('status-running');
@@ -707,6 +718,7 @@
         {
             return;
         }
+
         for(let i = 0; i < p_service_cpus.length; i++)
         {
             if(p_service_cpus[i].rate === null)
@@ -732,9 +744,19 @@
                 service_list[i].status = '起動中';
             }
 
-            service_list[i].cpu_color = 'service-' + p_service_cpus[i].color;
+            service_list[i].cpu_color = '';
+            if(p_service_cpus[i].color !== '')
+            {
+                service_list[i].cpu_color = 'service-' + p_service_cpus[i].color;
+            }
+
+            const $body = $section.find('.service-list-body');
+            $row = $body.find('tr').eq(i * 2);
+            $row.find('td').eq(3).html(service_list[i].status);
+            $row.find('.service-list-cpu').html(service_list[i].cpu);
+            $row.find('.service-list-cpu').removeClass('service-warn service-alert service-critical');
+            $row.find('.service-list-cpu').addClass(service_list[i].cpu_color);
         }
-        renderServiceList(p_server_id);
     }
 
     SocketManager.renderMemoryBar = function(p_server_id, p_types, p_services)
@@ -774,9 +796,21 @@
                 service_list[i].memory = p_services[i].rate + '%';
                 service_list[i].status = '起動中';
             }
-            service_list[i].memory_color = 'service-' + p_services[i].color;
+
+            service_list[i].memory_color = '';
+            if(p_services[i].color !== '')
+            {
+                service_list[i].memory_color = 'service-' + p_services[i].color;
+            }
+
+            const $section = getServerSection(p_server_id);
+            const $body = $section.find('.service-list-body');
+            $row = $body.find('tr').eq(i * 2);
+            $row.find('td').eq(3).html(service_list[i].status);
+            $row.find('.service-list-memory').html(service_list[i].memory);
+            $row.find('.service-list-memory').removeClass('service-warn service-alert service-critical');
+            $row.find('.service-list-memory').addClass(service_list[i].memory_color);
         }
-        renderServiceList(p_server_id);
     }
 
     SocketManager.renderDiskBar = function(p_server_id, p_disks)
@@ -1020,12 +1054,12 @@
             $(this).text(is_open ? '▶' : '▼');
         });
 
-        $('#server-container').on("click", ".add-server-btn", function()
+        $('#server-container').on('click', '.add-server-btn', function()
         {
             SocketManager.createServer();
         });
 
-        $('#server-container').on("click", ".remove-server-btn", function()
+        $('#server-container').on('click', '.remove-server-btn', function()
         {
             const $section = $(this).closest('.server-section');
             const server_id = $section.data('server-id');
@@ -1414,6 +1448,22 @@
             {
                 $recipient.data('user-id', user_id);
                 $recipient.val(user_name);
+            }
+        });
+
+        $('#server-container').on('click', '.toggle-detail-btn', function()
+        {
+            const $row = $(this).closest('tr');
+            const $detailRow = $row.next('tr');
+            const isVisible = $detailRow.is(':visible');
+
+            if(isVisible)
+            {
+                $detailRow.hide();
+            }
+            else
+            {
+                $detailRow.show();
             }
         });
     }

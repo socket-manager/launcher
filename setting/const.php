@@ -40,4 +40,25 @@ return [
      * @var int アライブチェックタイムアウト時間（s）
      */
     'alive_interval' => 3600,
+
+    /**
+     * カスタムモニタリングホストの設定
+     */
+    'custom_monitoring' =>
+    [
+        /**
+         * @var string ホスト名
+         */
+        'host' => 'localhost',
+
+        /**
+         * @var int ポート番号
+         */
+        'port' => 15000,
+
+        /**
+         * @var int ダウンタイム（ms）
+         */
+        'downtime' => 1000
+    ]
 ];

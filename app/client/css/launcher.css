@@ -431,6 +431,10 @@ button {
     background-color: #e9f5ff; /* ホバー時の背景色 */
 }
 
+.service-table td .toggle-detail-btn {
+    padding: 0px 0px 0px 0px;
+}
+
 /* 状態別の背景色 */
 .service-table td.status-running {
     background-color: #d4edda;
@@ -475,6 +479,46 @@ button {
 .service-table td button {
     width: 28px;
     height: 28px;
+}
+
+.monitoring-panel {
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-top: 1px solid #ccc;
+}
+
+.monitoring-label {
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.monitoring-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.monitoring-item {
+    flex: 1 1 200px;
+    min-width: 150px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 8px;
+    border-radius: 4px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.monitoring-item h5 {
+    margin: 0 0 4px;
+    font-size: 14px;
+    color: #333;
+}
+
+.monitoring-item pre {
+    margin: 0;
+    font-size: 13px;
+    color: #555;
+    white-space: pre-wrap;
 }
 
 .cpu-checkbox-row {

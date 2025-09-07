@@ -9,15 +9,18 @@
             this.handlerMap = new Map();
             this.guiElements = new Map();
 
-            this.ws.addEventListener("message", (e) =>
+            this.ws.addEventListener('message', (e) =>
             {
-                const msg = JSON.parse(e.data);
-                const key = `${msg.service}:${msg.type}`;
-                const handler = this.handlerMap.get(key);
-                if(handler)
+                const payload = JSON.parse(e.data);
+                $.each(payload.parts, (idx, val) =>
                 {
-                    handler(msg);
-                }
+                    const key = `${val.service}:${val.type}`;
+                    const handler = this.handlerMap.get(key);
+                    if(handler)
+                    {
+                        handler(val);
+                    }
+                });
             });
 
             this.#initHandlers(p_host, p_port);
@@ -35,40 +38,59 @@
                 .forEach(({ service, type, label }) =>
                 {
                     const key = `${service}:${type}`;
-                    this.handlerMap.set(key, (msg) =>
+                    this.handlerMap.set(key, (part) =>
                     {
-                        this.#updateGUI(label, msg.payload);
+                        this.#updateGUI(service, label, part.data);
                     });
-                    this.#createGUIItem(label);
                 });
         }
 
-        #createGUIItem(p_label)
+        #insertMonitoringItem(serviceLabel, partLabel, data)
         {
-            const container = document.createElement("div");
-            container.className = "gui-item";
+            const panel = document.querySelector(`.monitoring-panel[data-service="${serviceLabel}"]`);
+            if(!panel)
+            {
+                return;
+            }
 
-            const title = document.createElement("h4");
-            title.textContent = p_label;
+            const container = panel.querySelector('.monitoring-items');
+            if(!container)
+            {
+                return;
+            }
 
-            const content = document.createElement("pre");
-            content.className = "gui-content";
-            content.textContent = "待機中...";
+            // 既存項目があれば更新、なければ追加
+            let item = container.querySelector(`.monitoring-item[data-label="${partLabel}"]`);
+            if(!item)
+            {
+                item = document.createElement('div');
+                item.className = 'monitoring-item';
+                item.setAttribute('data-label', partLabel);
 
-            container.appendChild(title);
-            container.appendChild(content);
-            this.gui_root.appendChild(container);
+                const title = document.createElement('h5');
+                title.textContent = partLabel;
 
-            this.guiElements.set(p_label, content);
+                const content = document.createElement('pre');
+                content.className = 'monitoring-content';
+                content.textContent = data;
+
+                item.appendChild(title);
+                item.appendChild(content);
+                container.appendChild(item);
+            }
+            else
+            {
+                const content = item.querySelector('.monitoring-content');
+                if(content)
+                {
+                    content.textContent = data;
+                }
+            }
         }
 
-        #updateGUI(p_label, p_payload)
+        #updateGUI(p_service, p_label, p_data)
         {
-            const el = this.guiElements.get(p_label);
-            if(el)
-            {
-                el.textContent = JSON.stringify(p_payload, null, 2);
-            }
+            this.#insertMonitoringItem(p_service, p_label, p_data);
         }
     }
 
