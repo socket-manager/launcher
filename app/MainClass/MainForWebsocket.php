@@ -170,7 +170,7 @@ class MainForWebsocket extends Console
 
         $host = config('const.custom_monitoring.host', 'localhost');
         $port = config('const.custom_monitoring.port', 15000);
-        $downtime = config('const.custom_monitoring.downtime', 1000);
+        $downtime = config('const.custom_monitoring.downtime', null);
         $generator = new SimpleSocketGenerator(SimpleSocketTypeEnum::UDP, $host, $port, $downtime);
         $generator->setLogWriter($init->getLogWriter());
         $generator->setKeepRunning(function(?ISimpleSocketUdp $p_simple_socket, ParameterForWebsocket $p_param)
@@ -327,9 +327,12 @@ finish:
             $log_writer = $this->log_writer;
             $log_writer('error', ['type' => 'none-action', 'message' => $error_message, 'via' => 'CLI', 'who' => null, 'pid' => null]);
         }
-        if(file_exists($this->pid_path_for_launcher))
+        if(isset($not_conflict) && $not_conflict === true)
         {
-            unlink($this->pid_path_for_launcher);
+            if(file_exists($this->pid_path_for_launcher))
+            {
+                unlink($this->pid_path_for_launcher);
+            }
         }
 
         return;

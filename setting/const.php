@@ -59,6 +59,6 @@ return [
         /**
          * @var int ダウンタイム（ms）
          */
-        'downtime' => 1000
+        'downtime' => null
     ]
 ];

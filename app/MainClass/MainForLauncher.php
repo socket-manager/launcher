@@ -202,9 +202,12 @@ finish:
             $log_writer = $this->log_writer;
             $log_writer($level, ['type' => $action, 'message' => $error_message, 'via' => 'CLI', 'who' => null, 'pid' => null]);
         }
-        if(file_exists($this->pid_path_for_launcher))
+        if(!isset($not_conflict) || (isset($not_conflict) && $not_conflict === true))
         {
-            unlink($this->pid_path_for_launcher);
+            if(file_exists($this->pid_path_for_launcher))
+            {
+                unlink($this->pid_path_for_launcher);
+            }
         }
         return;
     }
