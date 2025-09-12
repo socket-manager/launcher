@@ -445,6 +445,34 @@
             .addClass(`disk-usage-${p_color}`);
     }
 
+    function updateOperatorDropdown(p_server_id)
+    {
+        const $section = getServerSection(p_server_id);
+        const operators = new Set();
+
+        $section.find('.log-entry').each(function()
+        {
+            const metaText = $(this).find('.log-meta').text();
+            const parts = metaText.split('/');
+            if(parts.length >= 2)
+            {
+                const operator = parts[1].trim();
+                if(operator && operator !== 'ー')
+                {
+                    operators.add(operator);
+                }
+            }
+        });
+
+        const $dropdown = $section.find('.filter-operator');
+        $dropdown.empty().append('<option value="all">オペレーター（すべて）</option>');
+
+        Array.from(operators).sort().forEach(op =>
+        {
+            $dropdown.append(`<option value="${op}">${op}</option>`);
+        });
+    }
+
     const SocketManager = {};
 
     SocketManager.createServer = function()
@@ -932,6 +960,7 @@
         {
             $log_container.append($line); // WebSocket受信時（最新が下）
         }
+        updateOperatorDropdown(p_server_id);
 
         // 最大件数制限
         const $entries = $log_container.find('.log-entry');
@@ -1465,6 +1494,35 @@
             {
                 $detailRow.show();
             }
+        });
+
+        $('#server-container').on('change', '.filter-level, .filter-action, .filter-operator', function()
+        {
+            const $log_area = $(this).closest('.launcher-log-area');
+            const selectedLevel = $log_area.find('.filter-level').val();
+            const selectedAction = $log_area.find('.filter-action').val();
+            const selectedOperator = $log_area.find('.filter-operator').val();
+
+            $log_area.find('.log-entry').each(function()
+            {
+                const level = $(this).find('.log-level').text().replace(/\[|\]/g, '').trim();
+                const action = $(this).find('.log-type').text().trim();
+                const metaText = $(this).find('.log-meta').text();
+                const operator = metaText.split('/')[1]?.trim();
+
+                const matchLevel = (selectedLevel === 'all' || level === selectedLevel);
+                const matchAction = (selectedAction === 'all' || action === selectedAction);
+                const matchOperator = (selectedOperator === 'all' || operator === selectedOperator);
+
+                if(matchLevel && matchAction && matchOperator)
+                {
+                    $(this).show();
+                }
+                else
+                {
+                    $(this).hide();
+                }
+            });
         });
     }
 

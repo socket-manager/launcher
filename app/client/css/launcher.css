@@ -596,6 +596,10 @@ button {
 }
 
 
+.launcher-log-area {
+    margin-top: 10px;
+}
+
 .launcher-log {
     border: 1px solid #ccc;
     border-radius: 6px;
