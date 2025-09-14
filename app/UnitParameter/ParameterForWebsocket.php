@@ -1553,8 +1553,6 @@ class ParameterForWebsocket extends SocketManagerParameter
             return;
         }
 
-        $p_log['who'] = $this->getUserName();
-
         $is_busy = $this->isOrderAction();
         foreach($cids ?? [] as $cid)
         {

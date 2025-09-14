@@ -531,7 +531,7 @@ finish_explore_for_start:
             {
                 // メッセージ出力
                 $msg = __('launcher.INFO_STARTED_SERVICE', ['service' => $p_param->service_list_current[$i]['name']]);
-                $p_param->logWriter('info', ['type' => $p_param->order_action_current['action'], 'message' => $msg, 'via' => $p_param->order_action_current['via'], 'who' => null, 'pid' => $p_param->service_list_current[$i]['pid']]);
+                $p_param->logWriter('info', ['type' => $p_param->order_action_current['action'], 'message' => $msg, 'via' => $p_param->order_action_current['via'], 'who' => $p_param->order_action_current['who'], 'pid' => $p_param->service_list_current[$i]['pid']]);
             }
 
             // 終了判定
@@ -704,7 +704,7 @@ finish_explore_for_start:
                 }
             }
 
-            $p_param->logWriter($level, ['type' => $p_param->order_action_current['action'], 'message' => $msg, 'via' => $p_param->order_action_current['via'], 'who' => null, 'pid' => $log_pid]);
+            $p_param->logWriter($level, ['type' => $p_param->order_action_current['action'], 'message' => $msg, 'via' => $p_param->order_action_current['via'], 'who' => $p_param->order_action_current['who'], 'pid' => $log_pid]);
 
             // 終了判定
             if(++$p_param->idx_process >= $p_param->max_process)
@@ -1188,7 +1188,7 @@ finish_explore_for_linux_starting:
             {
                 // メッセージ出力
                 $msg = __('launcher.INFO_STARTED_SERVICE', ['service' => $p_param->service_list_current[$i]['name']]);
-                $p_param->logWriter('info', ['type' => $p_param->order_action_current['action'], 'message' => $msg, 'via' => $p_param->order_action_current['via'], 'who' => null, 'pid' => $p_param->service_list_current[$i]['pid']]);
+                $p_param->logWriter('info', ['type' => $p_param->order_action_current['action'], 'message' => $msg, 'via' => $p_param->order_action_current['via'], 'who' => $p_param->order_action_current['action'], 'pid' => $p_param->service_list_current[$i]['pid']]);
             }
 
 finish_process_for_linux_start:
@@ -1363,7 +1363,7 @@ finish_process_for_linux_start:
                 }
             }
 
-            $p_param->logWriter($level, ['type' => $p_param->order_action_current['action'], 'message' => $msg, 'via' => $p_param->order_action_current['via'], 'who' => null, 'pid' => $log_pid]);
+            $p_param->logWriter($level, ['type' => $p_param->order_action_current['action'], 'message' => $msg, 'via' => $p_param->order_action_current['via'], 'who' => $p_param->order_action_current['who'], 'pid' => $log_pid]);
 
             // 終了判定
             if(++$p_param->idx_process >= $p_param->max_process)
