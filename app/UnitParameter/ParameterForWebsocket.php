@@ -187,7 +187,7 @@ class ParameterForWebsocket extends SocketManagerParameter
     private ?array $resource_disk = null;
 
     /**
-     * テスト使用率
+     * テスト使用率（'up','down','mix'）
      */
     private ?array $resource_tests =
     [
@@ -618,22 +618,24 @@ class ParameterForWebsocket extends SocketManagerParameter
 
         if($email !== null && $level_name !== '')
         {
+            $host = gethostname();
+            $port = $this->getAwaitPort();
             if($level_name === 'critical')
             {
-                $email['subject'] = __('launcher.MAIL_SUBJECT_CRITICAL', ['type' => $type_label]);
-                $email['body'] = __('launcher.MAIL_BODY_CRITICAL', ['type' => $type_label, 'usage' => $p_rate, 'threshold' => $threshold]);
+                $email['subject'] = __('notification-email.MAIL_SUBJECT_CRITICAL', ['type' => $type_label, 'server' => "{$host}:{$port}"]);
+                $email['body'] = __('notification-email.MAIL_BODY_CRITICAL', ['type' => $type_label, 'usage' => $p_rate, 'threshold' => $threshold, 'server' => "{$host}:{$port}", 'timestamp' => date('Y-m-d H:i:s')]);
             }
             else
             if($level_name === 'alert')
             {
-                $email['subject'] = __('launcher.MAIL_SUBJECT_ALERT', ['type' => $type_label]);
-                $email['body'] = __('launcher.MAIL_BODY_ALERT', ['type' => $type_label, 'usage' => $p_rate, 'threshold' => $threshold]);
+                $email['subject'] = __('notification-email.MAIL_SUBJECT_ALERT', ['type' => $type_label, 'server' => "{$host}:{$port}"]);
+                $email['body'] = __('notification-email.MAIL_BODY_ALERT', ['type' => $type_label, 'usage' => $p_rate, 'threshold' => $threshold, 'server' => "{$host}:{$port}", 'timestamp' => date('Y-m-d H:i:s')]);
             }
             else
             if($level_name === 'warn')
             {
-                $email['subject'] = __('launcher.MAIL_SUBJECT_WARN', ['type' => $type_label]);
-                $email['body'] = __('launcher.MAIL_BODY_WARN', ['type' => $type_label, 'usage' => $p_rate, 'threshold' => $threshold]);
+                $email['subject'] = __('notification-email.MAIL_SUBJECT_WARN', ['type' => $type_label, 'server' => "{$host}:{$port}"]);
+                $email['body'] = __('notification-email.MAIL_BODY_WARN', ['type' => $type_label, 'usage' => $p_rate, 'threshold' => $threshold, 'server' => "{$host}:{$port}", 'timestamp' => date('Y-m-d H:i:s')]);
             }
 
             mail($email['to'], $email['subject'], $email['body'], $email['headers']);

@@ -80,12 +80,5 @@ EOS,
     'NOTICE_SETTING_LOAD' => '設定ファイルをロードしました',
     'NOTICE_LAUNCHER_BUSY' => 'ランチャー処理中...',
     'INFO_ENTERING_SUCCESS' => '接続しました。',
-    'INFO_LEAVING' => '切断しました。',
-
-    'MAIL_SUBJECT_CRITICAL' => '【サーバー通知（critical）】:typeリソース使用率が閾値を超えました',
-    'MAIL_BODY_CRITICAL' => '❌ :typeリソース使用率が閾値を超えました。即時対応が必要なレベルです：:usage%（閾値：:threshold%）',
-    'MAIL_SUBJECT_ALERT' => '【サーバー通知（alert）】:typeリソース使用率が閾値を超えました',
-    'MAIL_BODY_ALERT' => '🚨 :typeリソース使用率が閾値を超えました。高負荷状態です：:usage%（閾値：:threshold%）',
-    'MAIL_SUBJECT_WARN' => '【サーバー通知（warn）】:typeリソース使用率が閾値を超えました',
-    'MAIL_BODY_WARN' => '⚠️ :typeリソース使用率が閾値を超えたため注意が必要です：:usage%（閾値：:threshold%）'
+    'INFO_LEAVING' => '切断しました。'
 ];

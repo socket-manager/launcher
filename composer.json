@@ -1,6 +1,6 @@
 {
     "name": "socket-manager/launcher",
-    "description": "SOCKET-MANAGER Launcher: サービス管理用ソケットマネージャーランチャー",
+    "description": "SOCKET-MANAGER Launcher: サービス管理用 GUI & CLI ランチャー",
     "type": "project",
     "license": "MIT",
     "keywords": [
@@ -25,7 +25,7 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "socket-manager/library": "~1.18.0"
+        "socket-manager/library": "~1.19.0"
     },
     "repositories": {
         "socket-manager/library": {
