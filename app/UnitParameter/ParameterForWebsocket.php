@@ -638,7 +638,17 @@ class ParameterForWebsocket extends SocketManagerParameter
                 $email['body'] = __('notification-email.MAIL_BODY_WARN', ['type' => $type_label, 'usage' => $p_rate, 'threshold' => $threshold, 'server' => "{$host}:{$port}", 'timestamp' => date('Y-m-d H:i:s')]);
             }
 
-            mail($email['to'], $email['subject'], $email['body'], $email['headers']);
+            $w_ret = @mail($email['to'], $email['subject'], $email['body'], $email['headers']);
+            if($w_ret === false)
+            {
+                $msg_ary = error_get_last();
+                $err_msg = '';
+                if(isset($msg_ary['message']))
+                {
+                    $err_msg = $msg_ary['message'];
+                }
+                $this->logWriter('error', ['Email sending failed' => $err_msg]);
+            }
         }
 
         return $level_name;
