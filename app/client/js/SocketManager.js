@@ -779,8 +779,47 @@
             }
 
             const $body = $section.find('.service-list-body');
-            $row = $body.find('tr').eq(i * 2);
-            $row.find('td').eq(3).html(service_list[i].status);
+            const $row = $body.find('tr').eq(i * 2);
+            const $status = $row.find('td').eq(3);
+            $status.html(service_list[i].status);
+            $status.removeClass('status-running status-stopped status-operation status-abnormality');
+            const $start_btn = $row.find('button').eq(0); // 起動／停止ボタン
+            const $edit_btn = $row.find('button').eq(2); // 編集ボタン
+            const $delete_btn = $row.find('button').eq(3); // 削除ボタン
+            if(service_list[i].status === '起動中')
+            {
+                $status.addClass('status-running');
+                $start_btn.text('⏹');
+                $start_btn.prop('disabled', false);
+                $edit_btn.prop('disabled', true);
+                $delete_btn.prop('disabled', true);
+            }
+            else
+            if(service_list[i].status === '停止中')
+            {
+                $status.addClass('status-stopped');
+                $start_btn.text('▶');
+                $start_btn.prop('disabled', false);
+                $edit_btn.prop('disabled', false);
+                $delete_btn.prop('disabled', false);
+            }
+            else
+            if(service_list[i].status === '操作中')
+            {
+                $status.addClass('status-operation');
+                $start_btn.prop('disabled', true);
+                $edit_btn.prop('disabled', true);
+                $delete_btn.prop('disabled', true);
+            }
+            else
+            if(service_list[i].status === '未検知')
+            {
+                $status.addClass('status-abnormality');
+                $start_btn.text('▶');
+                $start_btn.prop('disabled', false);
+                $edit_btn.prop('disabled', true);
+                $delete_btn.prop('disabled', true);
+            }
             $row.find('.service-list-cpu').html(service_list[i].cpu);
             $row.find('.service-list-cpu').removeClass('service-warn service-alert service-critical');
             $row.find('.service-list-cpu').addClass(service_list[i].cpu_color);
@@ -833,8 +872,47 @@
 
             const $section = getServerSection(p_server_id);
             const $body = $section.find('.service-list-body');
-            $row = $body.find('tr').eq(i * 2);
-            $row.find('td').eq(3).html(service_list[i].status);
+            const $row = $body.find('tr').eq(i * 2);
+            $status = $row.find('td').eq(3);
+            $status.html(service_list[i].status);
+            $status.removeClass('status-running status-stopped status-operation status-abnormality');
+            const $start_btn = $row.find('button').eq(0); // 起動／停止ボタン
+            const $edit_btn = $row.find('button').eq(2); // 編集ボタン
+            const $delete_btn = $row.find('button').eq(3); // 削除ボタン
+            if(service_list[i].status === '起動中')
+            {
+                $status.addClass('status-running');
+                $start_btn.text('⏹');
+                $start_btn.prop('disabled', false);
+                $edit_btn.prop('disabled', true);
+                $delete_btn.prop('disabled', true);
+            }
+            else
+            if(service_list[i].status === '停止中')
+            {
+                $status.addClass('status-stopped');
+                $start_btn.text('▶');
+                $start_btn.prop('disabled', false);
+                $edit_btn.prop('disabled', false);
+                $delete_btn.prop('disabled', false);
+            }
+            else
+            if(service_list[i].status === '操作中')
+            {
+                $status.addClass('status-operation');
+                $start_btn.prop('disabled', true);
+                $edit_btn.prop('disabled', true);
+                $delete_btn.prop('disabled', true);
+            }
+            else
+            if(service_list[i].status === '未検知')
+            {
+                $status.addClass('status-abnormality');
+                $start_btn.text('▶');
+                $start_btn.prop('disabled', false);
+                $edit_btn.prop('disabled', true);
+                $delete_btn.prop('disabled', true);
+            }
             $row.find('.service-list-memory').html(service_list[i].memory);
             $row.find('.service-list-memory').removeClass('service-warn service-alert service-critical');
             $row.find('.service-list-memory').addClass(service_list[i].memory_color);
