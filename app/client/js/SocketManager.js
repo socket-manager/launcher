@@ -152,6 +152,17 @@
         }
 
         let stop_cnt = 0;
+        let disabled = false;
+        if(service_list.length <= 0)
+        {
+            disabled = true;
+        }
+        $section.find('.start-all-btn').prop('disabled', disabled);
+        $section.find('.stop-all-btn').prop('disabled', disabled);
+        $section.find('.group-selector').prop('disabled', disabled);
+        $section.find('.start-group-btn').prop('disabled', disabled);
+        $section.find('.stop-group-btn').prop('disabled', disabled);
+        $section.find('.download-json-btn').prop('disabled', disabled);
         service_list.forEach((svc, index) =>
         {
             let cpu = 'ー';
