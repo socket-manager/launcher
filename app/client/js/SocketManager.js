@@ -156,14 +156,14 @@
         {
             let cpu = 'ー';
             let cpu_color = '';
-            if(typeof(svc.cpu) !== 'undefined')
+            if(typeof(svc.cpu) !== 'undefined' && svc.cpu !== 'ー')
             {
                 cpu = svc.cpu;
                 cpu_color = svc.cpu_color;
             }
             let memory = 'ー';
             let memory_color = '';
-            if(typeof(svc.memory) !== 'undefined')
+            if(typeof(svc.memory) !== 'undefined' && svc.memory !== 'ー')
             {
                 memory = svc.memory;
                 memory_color = svc.memory_color;

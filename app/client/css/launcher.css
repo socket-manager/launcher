@@ -461,15 +461,15 @@ button {
 }
 
 .service-warn {
-    background-color: #FFCCCC;
+    background-color: #fdd835;
 }
 
 .service-alert {
-    background-color: #FFBBBB;
+    background-color: #fb8c00;
 }
 
 .service-critical {
-    background-color: #FFAAAA;
+    background-color: #e53935;
 }
 
 .service-list-memory {
