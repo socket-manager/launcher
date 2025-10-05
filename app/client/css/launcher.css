@@ -544,6 +544,17 @@ button {
     gap: 16px;
 }
 
+.edit-path {
+    margin-top: 5px;
+}
+
+.edit-path,
+.edit-command {
+    height: 1.5em; /* inputと同じ高さに調整 */
+    resize: horizontal;
+    box-sizing: border-box;
+}
+
 .error-msg {
     color: #dc3545;
 }
