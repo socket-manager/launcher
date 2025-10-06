@@ -467,9 +467,10 @@
             const parts = metaText.split('/');
             if(parts.length >= 2)
             {
-                const operator = parts[1].trim();
+                let operator = parts[1].trim();
                 if(operator && operator !== 'ー')
                 {
+                    operator = SocketManager.escapeHtml(operator);
                     operators.add(operator);
                 }
             }
@@ -634,6 +635,7 @@
         const $operator_input = $header.find('.operator-input');
         const $connect_btn = $header.find('.connect-btn');
 
+        $operator_input.val(sockets.get(p_server_id).getSelfUserName());
         $header.addClass('connecting');
         $protocol.prop('disabled', true);
         $host_input.prop('readonly', true);
@@ -991,6 +993,8 @@
 
     SocketManager.showServiceOverlayConfirm = function(p_server_id, p_message, p_on_confirm, p_on_cancel)
     {
+        p_message = SocketManager.escapeHtml(p_message);
+
         const $section = getServerSection(p_server_id);
         const overlay =
         $(`
@@ -1613,6 +1617,16 @@
                 }
             });
         });
+    }
+
+    SocketManager.escapeHtml = function(p_str)
+    {
+        return String(p_str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
     }
 
     global.SocketManager = SocketManager;

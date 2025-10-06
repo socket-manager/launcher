@@ -349,6 +349,8 @@ class CommandForWebsocket implements IEntryUnits
             $w_ret = $p_param->getTempBuff(['recv_data', 'service_list']);
             $payload = $w_ret['recv_data'];
 
+            $payload['user'] = str_replace('/', '', $payload['user']);
+            $payload['user'] = htmlspecialchars($payload['user'], ENT_QUOTES, 'UTF-8');
             $user = __('launcher.OPTION_ADMIN_USER');
             $message = __('launcher.INFO_ENTERING_SUCCESS');
             $result = $p_param->entryUser($payload['user'], $message);
@@ -538,6 +540,23 @@ class CommandForWebsocket implements IEntryUnits
             $payload = $w_ret['data'];
 
             $command_type = $payload['type'];
+
+            if(isset($payload['items']['name']))
+            {
+                $payload['items']['name'] = htmlspecialchars($payload['items']['name'], ENT_QUOTES, 'UTF-8');
+            }
+            if(isset($payload['items']['group']))
+            {
+                $payload['items']['group'] = htmlspecialchars($payload['items']['group'], ENT_QUOTES, 'UTF-8');
+            }
+            if(isset($payload['items']['path']))
+            {
+                $payload['items']['path'] = htmlspecialchars($payload['items']['path'], ENT_QUOTES, 'UTF-8');
+            }
+            if(isset($payload['items']['command']))
+            {
+                $payload['items']['command'] = htmlspecialchars($payload['items']['command'], ENT_QUOTES, 'UTF-8');
+            }
 
             // busyチェック
             $is_busy = $p_param->isOperatingLauncher();
@@ -805,7 +824,7 @@ class CommandForWebsocket implements IEntryUnits
                 $message = __('launcher.NOTICE_SETTING_LOAD');
             }
 
-            $p_param->param_launcher->logWriter('info', ['type' => $type, 'message' => $message, 'via' => 'GUI', 'who' => '', 'pid' => null]);
+            $p_param->param_launcher->logWriter('info', ['type' => $type, 'message' => $message, 'via' => 'GUI', 'who' => $p_param->getUserName(), 'pid' => null]);
 
             $response =
             [
@@ -846,6 +865,7 @@ class CommandForWebsocket implements IEntryUnits
             $w_ret = $p_param->getRecvData();
             $payload = $w_ret['data'];
 
+            $payload['message'] = htmlspecialchars($payload['message'], ENT_QUOTES, 'UTF-8');
             $cid = $p_param->getConnectionId();
             $datetime = date(ParameterForWebsocket::DATETIME_FORMAT);
             $message =
@@ -889,6 +909,7 @@ class CommandForWebsocket implements IEntryUnits
             $payload = $w_ret['data'];
             $datetime = date(ParameterForWebsocket::DATETIME_FORMAT);
 
+            $payload['message'] = htmlspecialchars($payload['message'], ENT_QUOTES, 'UTF-8');
             $w_ret = $p_param->getUserName($payload['uid']);
             if($w_ret === null)
             {

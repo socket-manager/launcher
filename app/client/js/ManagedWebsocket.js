@@ -22,6 +22,7 @@
         constructor(p_server_id, p_protocol, p_host, p_port, p_operator, p_params, p_gui_root)
         {
             this.flg_error = false;
+            this.flg_connection_failure = false;
             this.self_user_id = null;
             this.self_user_name = p_operator;
             this.option_message = {admin_user: OPTION_ADMIN_USER, server_close: OPTION_SERVER_CLOSE, unexpected_error: OPTION_UNEXPECTED_ERROR};
@@ -71,6 +72,7 @@
                 if(data.result)
                 {
                     this.self_user_id = data.uid;
+                    this.self_user_name = data.user;
                     this.user_list = new Map(Object.entries(data.user_list));
                     SocketManager.entryUserList(this.server_id, this.getSelfUserId(), this.user_list);
                     SocketManager.connected(this.server_id);
@@ -79,8 +81,9 @@
                 }
                 else
                 {
-                    SocketManager.connectionFailure(this.server_id);
+                    this.flg_connection_failure = true;
                     SocketManager.entryChatLog({p_server_id: this.server_id, p_datetime: data.datetime, p_message: data.message, p_user_id: data.uid, p_user_name: data.user});
+                    this.disconnect();
                 }
             }
             else
@@ -188,6 +191,12 @@
 
             if(this.flg_error === true)
             {
+                return;
+            }
+            else
+            if(this.flg_connection_failure === true)
+            {
+                SocketManager.connectionFailure(this.server_id);
                 return;
             }
 
