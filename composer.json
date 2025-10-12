@@ -10,7 +10,9 @@
         "cli",
         "gui",
         "service",
-        "monitoring"
+        "monitoring",
+        "devops",
+        "cuei/o"
     ],
     "autoload": {
         "psr-4": {
