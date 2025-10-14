@@ -12,7 +12,7 @@
         "service",
         "monitoring",
         "devops",
-        "cuei/o"
+        "cuei-o"
     ],
     "autoload": {
         "psr-4": {
