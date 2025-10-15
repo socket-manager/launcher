@@ -639,6 +639,11 @@ button {
     color: #856404;
 }
 
+.log-warning {
+    background-color: #fdeacc;
+    color: #a15c1b;
+}
+
 .log-error {
     background-color: #f8d7da;
     color: #721c24;
