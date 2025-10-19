@@ -1594,10 +1594,12 @@ class ParameterForWebsocket extends SocketManagerParameter
             ];
             $this->setSendStack($data, $cid);
 
+            $log = $p_log;
+            $log['message'] = htmlspecialchars($log['message']);
             $launcher_log =
             [
                 'cmd' => CommandForWebsocketQueueEnum::LAUNCHER_LOG->value,
-                'log' => $p_log
+                'log' => $log
             ];
             $data =
             [

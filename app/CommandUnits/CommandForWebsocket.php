@@ -247,6 +247,7 @@ class CommandForWebsocket implements IEntryUnits
                 }
             }
 
+            $log['message'] = htmlspecialchars($log['message']);
             $launcher_log =
             [
                 'cmd' => CommandForWebsocketQueueEnum::LAUNCHER_LOG->value,
