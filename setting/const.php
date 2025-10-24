@@ -57,7 +57,7 @@ return [
         'port' => 15000,
 
         /**
-         * @var int ダウンタイム（ms）
+         * @var int ダウンタイム（ms）⇒ null指定時はデフォルト値（100ms）が適用されます
          */
         'downtime' => null
     ]
