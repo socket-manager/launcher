@@ -133,7 +133,7 @@ class InitForLauncher implements IInitRuntimeManager
                     $this->unit_parameter->param_websocket->noticeLauncherLog($all_item);
                 }
 
-                $log = json_encode($all_item)."\n";
+                $log = json_encode($all_item, JSON_UNESCAPED_UNICODE)."\n";
                 error_log($log, 3, "{$this->log_path_for_launcher}/{$filename}.log");
 
                 if($this->stdout_enabled)
