@@ -97,6 +97,11 @@ class ParameterForWebsocket extends SocketManagerParameter
      */
     public const DATETIME_FORMAT = 'Y-m-d H:i:s';
 
+    /**
+     * チャットログファイル名日時形式
+     */
+    public const CHAT_LOG_FILENAME_DATETIME = 'Ymd';
+
 
     //--------------------------------------------------------------------------
     // プロパティ
@@ -202,6 +207,11 @@ class ParameterForWebsocket extends SocketManagerParameter
      */
     public bool $setting_edit_flg = false;
 
+    /**
+     * チャットログの保存先
+     */
+    private string $log_path_for_chat = '';
+
 
     //--------------------------------------------------------------------------
     // メソッド
@@ -240,6 +250,8 @@ class ParameterForWebsocket extends SocketManagerParameter
         {
             $this->prev_threshold_level['disk'][$disk] = 0;
         }
+
+        $this->log_path_for_chat = config('launcher.log_path_for_chat');
     }
 
 
@@ -1608,4 +1620,44 @@ class ParameterForWebsocket extends SocketManagerParameter
             $this->setSendStack($data, $cid);
         }
     }
+
+    //--------------------------------------------------------------------------
+    // チャットログ出力関係
+    //--------------------------------------------------------------------------
+
+    /**
+     * チャットログの書き込み
+     * 
+     * @param string $p_datetime 日時
+     * @param string $p_user コメ主ユーザー
+     * @param string $p_comment コメント
+     */
+    public function chatLogWriter(string $p_datetime, string $p_user, string $p_comment)
+    {
+        $filename = date(self::CHAT_LOG_FILENAME_DATETIME);
+        $log = $p_datetime." [{$p_user}] {$p_comment}\n";
+        error_log($log, 3, $this->log_path_for_chat."/{$filename}.log");
+    }
+
+    /**
+     * プライベートチャットログの書き込み
+     * 
+     * @param string $p_datetime 日時
+     * @param string $p_suser 送信元ユーザー
+     * @param string $p_duser 送信先ユーザー
+     * @param string $p_comment コメント
+     * @param bool $p_result 送信結果
+     */
+    public function privateLogWriter(string $p_datetime, string $p_suser, string $p_duser, string $p_comment, bool $p_result)
+    {
+        $result = 'ng';
+        if($p_result === true)
+        {
+            $result = 'ok';
+        }
+        $filename = date(self::CHAT_LOG_FILENAME_DATETIME);
+        $log = $p_datetime." [{$p_suser}(private {$result})] {$p_comment}\n";
+        error_log($log, 3, $this->log_path_for_chat."/{$filename}.log");
+    }
+
 }

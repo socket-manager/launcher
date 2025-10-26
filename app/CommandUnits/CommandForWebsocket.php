@@ -414,6 +414,7 @@ class CommandForWebsocket implements IEntryUnits
             ];
             $p_param->setSendStackAll($data, true);
 
+            $p_param->chatLogWriter($datetime, $user_name, $broadcast['message']);
             return null;
         };
     }
@@ -883,6 +884,7 @@ class CommandForWebsocket implements IEntryUnits
             ];
             $p_param->setSendStackAll($data);
 
+            $p_param->chatLogWriter($datetime, $p_param->getUserName(), $payload['message']);
             return null;
         };
     }
@@ -927,6 +929,7 @@ class CommandForWebsocket implements IEntryUnits
                 ];
                 $p_param->setSendStack($data);
 
+                $p_param->privateLogWriter($datetime, $p_param->getUserName(), 'user left', $payload['message'], false);
                 return null;
             }
 
@@ -958,6 +961,7 @@ class CommandForWebsocket implements IEntryUnits
             ];
             $p_param->setSendStack($data);
 
+            $p_param->privateLogWriter($datetime, $message['user'], $p_param->getUserName($payload['uid']), $message['message'], true);
             return null;
         };
     }
@@ -1001,6 +1005,8 @@ class CommandForWebsocket implements IEntryUnits
             $p_param->setSendStackAll($data, true);
 
             $p_param->deleteUser($cid);
+
+            $p_param->chatLogWriter($datetime, $user, $broadcast['message']);
 
             return CommandForWebsocketStatusEnum::CLOSE->value;
         };

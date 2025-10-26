@@ -29,6 +29,11 @@ return [
     'log_path_for_launcher' => './logs/launcher',
 
     /**
+     * チャット用ログファイルのパス
+     */
+    'log_path_for_chat' => './logs/chat',
+
+    /**
      * サービス設定ファイルのパス
      * 
      * 初期状態のサービス設定ファイル setting/service.json.sample にはサンプルが定義されています。
