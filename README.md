@@ -129,6 +129,12 @@ GUIモード時は start/stop 系アクションのボタンを使って操作�
 - stopall  
   サービス設定ファイルで定義済みの全サービスを停止
 
+- restart  
+  "サービス名"、あるいは"group:サービス名"を指定して再起動
+
+- restartall  
+  サービス設定ファイルで定義済みの全サービスを再起動
+
 - status  
   "サービス名"、あるいは"group:サービス名"を指定して状態表示
 
@@ -164,6 +170,8 @@ start <サービス名> or <group:グループ名>
 startall
 stop <サービス名> or <group:グループ名>
 stopall
+restart <サービス名> or <group:グループ名>
+restartall
 status <サービス名> or <group:グループ名>
 statusall
 cpuinfo
@@ -183,6 +191,12 @@ GUI モードで確認する時は以下のコマンドを入力してくださ�
 <br />
 
 ※初期状態のサービス設定ファイル `setting/service.json.sample` にはサンプルが定義されています。内容を定義後はファイル名をデフォルトの `service.json` にしてからお使い下さい。ファイル名は設定ファイルで変更可能です。
+
+---
+
+## 【 ドキュメント 】
+GUI や CLI モードでの詳しい使い方や、設定ファイルのメンテナンス方法などの解説は以下のドキュメントを参照してください  
+https://socket-manager.github.io/document/launcher/
 
 ---
 

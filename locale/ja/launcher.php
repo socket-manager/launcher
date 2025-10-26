@@ -11,6 +11,8 @@ start <サービス名> or <group:グループ名>
 startall
 stop <サービス名> or <group:グループ名>
 stopall
+restart <サービス名> or <group:グループ名>
+restartall
 status <サービス名> or <group:グループ名>
 statusall
 cpuinfo
