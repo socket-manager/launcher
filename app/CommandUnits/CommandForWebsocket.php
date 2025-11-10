@@ -379,6 +379,10 @@ class CommandForWebsocket implements IEntryUnits
             ];
             $p_param->setSendStack($data);
 
+            if($result === false)
+            {
+                return null;
+            }
             return CommandForWebsocketStatusEnum::BROADCAST->value;
         };
     }
@@ -988,6 +992,10 @@ class CommandForWebsocket implements IEntryUnits
             $datetime = date(ParameterForWebsocket::DATETIME_FORMAT);
             $cid = $p_param->getConnectionId();
             $user = $p_param->getUserName($cid);
+            if($user === null)
+            {
+                return CommandForWebsocketStatusEnum::CLOSE->value;
+            }
             $broadcast =
             [
                 'cmd' => CommandForWebsocketQueueEnum::LEAVING->value,

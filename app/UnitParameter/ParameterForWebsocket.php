@@ -404,10 +404,14 @@ class ParameterForWebsocket extends SocketManagerParameter
     /**
      * ユーザーの削除
      * 
-     * @param string $p_cid 接続ID
+     * @param ?string $p_cid 接続ID
      */
-    public function deleteUser(string $p_cid)
+    public function deleteUser(?string $p_cid = null)
     {
+        if($p_cid === null)
+        {
+            $p_cid = $this->getConnectionId();
+        }
         unset($this->user_list[$p_cid]);
     }
 

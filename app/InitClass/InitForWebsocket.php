@@ -12,6 +12,8 @@ use SocketManager\Library\SocketManagerParameter;
 
 use App\UnitParameter\ParameterForWebsocket;
 
+use App\CommandUnits\CommandForWebsocketQueueEnum;
+
 
 /**
  * SocketManager初期化クラス
@@ -145,7 +147,31 @@ class InitForWebsocket implements IInitSocketManager
      */
     public function getEmergencyCallback()
     {
-        return null;
+        return function(ParameterForWebsocket $p_param)
+        {
+            $datetime = date(ParameterForWebsocket::DATETIME_FORMAT);
+            $cid = $p_param->getConnectionId();
+            $user = $p_param->getUserName($cid);
+            $broadcast =
+            [
+                'cmd' => CommandForWebsocketQueueEnum::LEAVING->value,
+                'datetime' => $datetime,
+                'uid' => $cid,
+                'user' => $user,
+                'message' => __('launcher.INFO_LEAVING')
+            ];
+
+            // 自身を除く全コネクションへ配信
+            $data =
+            [
+                'data' => $broadcast
+            ];
+            $p_param->setSendStackAll($data, true);
+
+            $p_param->deleteUser($cid);
+
+            $p_param->chatLogWriter($datetime, $user, $broadcast['message']);
+        };
     }
 
     /**
