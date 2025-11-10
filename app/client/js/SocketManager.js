@@ -623,6 +623,11 @@
         $operator_input.prop('readonly', false);
         $connect_btn.prop('disabled', false);
         updateConnectionStatus($header, '接続失敗', 'status-error');
+
+        if(sockets.has(p_server_id))
+        {
+            sockets.delete(p_server_id);
+        }
     };
 
     SocketManager.connected = function(p_server_id)
