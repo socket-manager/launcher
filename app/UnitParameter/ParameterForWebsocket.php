@@ -527,10 +527,10 @@ class ParameterForWebsocket extends SocketManagerParameter
      * 
      * @param array $p_type リソースタイプ（cpu or memory or disk）
      * @param array $p_setting 閾値設定データ
-     * @param int $p_rate レート値
+     * @param float $p_rate レート値
      * @return string 閾値レベル名
      */
-    private function getThresholdNameWithNotification(array $p_type, array $p_setting, int $p_rate): string
+    private function getThresholdNameWithNotification(array $p_type, array $p_setting, float $p_rate): string
     {
         /**
          * @var string $level_name 閾値のレベル名称
@@ -1456,12 +1456,12 @@ class ParameterForWebsocket extends SocketManagerParameter
      * 調整使用率の取得
      * 
      * @param ?array &$p_type 調整タイプ
-     * @param int &$p_used 使用量
-     * @param int $p_total トータル使用量
+     * @param float &$p_used 使用量
+     * @param float $p_total トータル使用量
      * @param ?int $p_decimal_digits 少数桁数指定の四捨五入
      * @return int 調整後の使用率
      */
-    private function getAdjustRate(?array &$p_type, int &$p_used, int $p_total, ?int $p_decimal_digits = null)
+    private function getAdjustRate(?array &$p_type, float &$p_used, float $p_total, ?int $p_decimal_digits = null)
     {
         if($p_type === null)
         {
@@ -1502,10 +1502,10 @@ class ParameterForWebsocket extends SocketManagerParameter
      * レート値による閾値レベル名の取得
      * 
      * @param array $p_setting 閾値設定データ
-     * @param int $p_rate レート値
+     * @param float $p_rate レート値
      * @return string 閾値レベル名
      */
-    private function getThresholdName(array $p_setting, int $p_rate)
+    private function getThresholdName(array $p_setting, float $p_rate)
     {
         /**
          * @var string $level_name 閾値のレベル名称
