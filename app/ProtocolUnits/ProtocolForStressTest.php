@@ -589,25 +589,29 @@ class ProtocolForStressTest extends ProtocolForBenchmark
                 printf("alive check count[{$p_param->sample_count}]\r");
                 if($p_param->sample_count >= $p_param->samples)
                 {
-                    $round_time = ($round_end - $p_param->round_start_time) / 1000000;
-                    $avg = $round_time / $p_param->samples;
+                    // 経過時間の算出
+                    $elapsed_ns = $round_end - $p_param->test_start_time;
+                    $elapsed_sec = intdiv($elapsed_ns, 1_000_000_000); // ナノ秒 → 秒（整数）
 
-                    $elapsed_time = (int)(($round_end - $p_param->test_start_time) / 1000000000);
+                    $hours = intdiv($elapsed_sec, 3600);
+                    $minutes = intdiv($elapsed_sec % 3600, 60);
+                    $seconds = $elapsed_sec % 60;
 
-                    $seconds = sprintf("%02d", (int)($elapsed_time % 60));
-                    $minutes = sprintf("%02d", (int)($elapsed_time / 60));
-                    $hours   = sprintf("%02d", (int)($minutes / 60));
+                    $time = sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds);
 
-                    $time = "{$hours}:{$minutes}:{$seconds}";
+                    // ラウンドアベレージの算出
+                    $round_elapsed_ns = $round_end - $p_param->round_start_time;
+                    $round_elapsed_ms = intdiv($round_elapsed_ns, 1_000_000);
+                    $avg = $round_elapsed_ms / $p_param->samples;
 
                     // ファイル保存
                     $filename = date('Ymd');
                     $path = "./logs/socket-manager/stress-test/{$filename}.log";
                     $fp = fopen($path, 'a');
-                    fputcsv($fp, [$time, $avg, $round_time], ',', '"', '\\');
+                    fputcsv($fp, [$time, $avg, $round_elapsed_ms], ',', '"', '\\');
                     fclose($fp);
 
-                    printf("\n[{$time}]avg[{$avg}]ms total[{$round_time}]ms\n");
+                    printf("\n[{$time}]avg[{$avg}]ms total[{$round_elapsed_ms}]ms\n");
 
                     $ping_start =
                     [

@@ -625,8 +625,8 @@ finish_explore_for_start:
 
             $i = $p_param->idx_process;
             $pid = $p_param->service_list_current[$i]['pid'];
-            $this->timer_start = microtime(true);
-            exec("taskkill /PID {$pid} /F", $output, $this->exit_code);
+            $this->timer_start = intval(microtime(true));
+            @exec("taskkill /PID {$pid} /F", $output, $this->exit_code);
 
             return RuntimeStatusEnumForLauncher::STOP_POLLING->value;
         };
@@ -1284,8 +1284,8 @@ finish_process_for_linux_start:
 
             $i = $p_param->idx_process;
             $pid = $p_param->service_list_current[$i]['pid'];
-            $this->timer_start = microtime(true);
-            exec("kill {$pid}", $output, $this->exit_code);
+            $this->timer_start = intval(microtime(true));
+            @exec("kill {$pid}", $output, $this->exit_code);
 
             return RuntimeStatusEnumForLauncher::STOP_POLLING->value;
         };
