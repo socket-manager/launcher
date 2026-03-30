@@ -21,4 +21,9 @@ return [
      * @var int アライブチェックタイムアウト時間（s）
      */
     'alive_interval' => 3600,
+
+    /**
+     * @var bool 測定中の標準出力フラグ true（出力あり） or false（出力なし）
+     */
+    'stdout' => false,
 ];

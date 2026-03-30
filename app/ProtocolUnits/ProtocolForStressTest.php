@@ -41,6 +41,21 @@ class ProtocolForStressTest extends ProtocolForBenchmark
     //--------------------------------------------------------------------------
 
     /**
+     * @var string 接続先ホスト
+     */
+    private string $host = '';
+
+    /**
+     * @var int 接続先ポート番号
+     */
+    private int $port = -1;
+
+    /**
+     * @var bool 測定中の標準出力フラグ
+     */
+    private bool $stdout = false;
+
+    /**
      * @var string ペイロード
      */
     private string $payload = '';
@@ -53,8 +68,11 @@ class ProtocolForStressTest extends ProtocolForBenchmark
      * コンストラクタ
      * 
      */
-    public function __construct(string $p_payload)
+    public function __construct(string $p_payload, string $p_host, int $p_port)
     {
+        $this->host = $p_host;
+        $this->port = $p_port;
+        $this->stdout = config('benchmark.stdout', false);
         $this->payload = $p_payload;
     }
 
@@ -315,7 +333,10 @@ class ProtocolForStressTest extends ProtocolForBenchmark
                     $p_param->setTempBuff($timer);
 
                     $p_param->sample_count++;
-                    printf("handshake count[{$p_param->sample_count}]\r");
+                    if($this->stdout)
+                    {
+                        printf("handshake count[{$p_param->sample_count}]\r");
+                    }
                     if($p_param->sample_count >= $p_param->samples)
                     {
                         $vals = [];
@@ -325,6 +346,12 @@ class ProtocolForStressTest extends ProtocolForBenchmark
                             $timer = $p_param->getTempBuff(['timer'], $cid);
                             $vals[] = ($timer['timer']['end'] - $timer['timer']['start'])/1000000;
                         }
+
+                        // ファイル保存
+                        $filename = date('Ymd');
+                        $path = "./logs/socket-manager/stress-test/{$filename}-handshake-{$this->host}-{$this->port}.log";
+                        $data = implode("\n", $vals)."\n";
+                        file_put_contents($path, $data);
 
                         $bench = get_benchmark($vals);
                         $bench['total'] = $bench['total']/1000;
@@ -586,7 +613,10 @@ class ProtocolForStressTest extends ProtocolForBenchmark
                     exit;
                 }
                 $p_param->sample_count++;
-                printf("alive check count[{$p_param->sample_count}]\r");
+                if($this->stdout)
+                {
+                    printf("alive check count[{$p_param->sample_count}]\r");
+                }
                 if($p_param->sample_count >= $p_param->samples)
                 {
                     // 経過時間の算出
@@ -606,7 +636,7 @@ class ProtocolForStressTest extends ProtocolForBenchmark
 
                     // ファイル保存
                     $filename = date('Ymd');
-                    $path = "./logs/socket-manager/stress-test/{$filename}.log";
+                    $path = "./logs/socket-manager/stress-test/{$filename}-{$this->host}-{$this->port}.log";
                     $fp = fopen($path, 'a');
                     fputcsv($fp, [$time, $avg, $round_elapsed_ms], ',', '"', '\\');
                     fclose($fp);

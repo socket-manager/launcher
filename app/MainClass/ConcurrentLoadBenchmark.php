@@ -116,7 +116,7 @@ class ConcurrentLoadBenchmark extends Console
         $manager->setInitSocketManager($init);
 
         // プロトコルUNITの設定
-        $entry = new ProtocolForConcurrentLoadBenchmark($samples);
+        $entry = new ProtocolForConcurrentLoadBenchmark($samples, $this->host, $this->port);
         $manager->setProtocolUnits($entry);
 
         //--------------------------------------------------------------------------

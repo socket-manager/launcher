@@ -155,7 +155,7 @@ class StressTest extends Console
         $manager->setInitSocketManager($init);
 
         // プロトコルUNITの設定
-        $entry = new ProtocolForStressTest($this->payload);
+        $entry = new ProtocolForStressTest($this->payload, $this->host, $this->port);
         $manager->setProtocolUnits($entry);
 
         // コマンドUNITの設定

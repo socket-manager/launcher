@@ -41,6 +41,11 @@ class ProtocolForPureLatencyBenchmark extends ProtocolForBenchmark
     //--------------------------------------------------------------------------
 
     /**
+     * @var bool 測定中の標準出力フラグ
+     */
+    private bool $stdout = false;
+
+    /**
      * @var int サンプル回数
      */
     private int $samples_max = 1;
@@ -70,6 +75,7 @@ class ProtocolForPureLatencyBenchmark extends ProtocolForBenchmark
      */
     public function __construct(int $p_samples, string $p_payload)
     {
+        $this->stdout = config('benchmark.stdout', false);
         $this->samples_max = $p_samples;
         $this->payload = $p_payload;
     }
@@ -572,7 +578,10 @@ class ProtocolForPureLatencyBenchmark extends ProtocolForBenchmark
                 $this->samples_array[] = ($end - $timer['alive_timer']['start'])/1000000;
 
                 $this->samples_count++;
-                printf("sample count[{$this->samples_count}]\r");
+                if($this->stdout)
+                {
+                    printf("sample count[{$this->samples_count}]\r");
+                }
                 if($this->samples_count >= $this->samples_max)
                 {
                     $vals = $this->samples_array;

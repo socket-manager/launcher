@@ -41,6 +41,21 @@ class ProtocolForConcurrentLoadBenchmark extends ProtocolForBenchmark
     //--------------------------------------------------------------------------
 
     /**
+     * @var string 接続先ホスト
+     */
+    private string $host = '';
+
+    /**
+     * @var int 接続先ポート番号
+     */
+    private int $port = -1;
+
+    /**
+     * @var bool 測定中の標準出力フラグ
+     */
+    private bool $stdout = false;
+
+    /**
      * @var int サンプル回数
      */
     private int $samples_max = 1;
@@ -58,8 +73,11 @@ class ProtocolForConcurrentLoadBenchmark extends ProtocolForBenchmark
      * コンストラクタ
      * 
      */
-    public function __construct(int $p_samples)
+    public function __construct(int $p_samples, string $p_host, int $p_port)
     {
+        $this->host = $p_host;
+        $this->port = $p_port;
+        $this->stdout = config('benchmark.stdout', false);
         $this->samples_max = $p_samples;
     }
 
@@ -320,7 +338,10 @@ class ProtocolForConcurrentLoadBenchmark extends ProtocolForBenchmark
                     $p_param->setTempBuff($timer);
 
                     $this->samples_count++;
-                    printf("sample count[{$this->samples_count}]\r");
+                    if($this->stdout)
+                    {
+                        printf("sample count[{$this->samples_count}]\r");
+                    }
                     if($this->samples_count >= $this->samples_max)
                     {
                         $vals = [];
@@ -330,6 +351,12 @@ class ProtocolForConcurrentLoadBenchmark extends ProtocolForBenchmark
                             $timer = $p_param->getTempBuff(['timer'], $cid);
                             $vals[] = ($timer['timer']['end'] - $timer['timer']['start'])/1000000;
                         }
+
+                        // ファイル保存
+                        $filename = date('Ymd');
+                        $path = "./logs/socket-manager/concurrent-load-benchmark/{$filename}-{$this->host}-{$this->port}.log";
+                        $data = implode("\n", $vals)."\n";
+                        file_put_contents($path, $data);
 
                         $bench = get_benchmark($vals);
                         $bench['total'] = $bench['total']/1000;
