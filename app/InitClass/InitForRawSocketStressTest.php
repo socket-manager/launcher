@@ -7,9 +7,10 @@
 
 namespace App\InitClass;
 
-
 use SocketManager\Library\IInitSocketManager;
 use SocketManager\Library\SocketManagerParameter;
+
+use App\UnitParameter\ParameterForRawSocketStressTest;
 
 
 /**
@@ -17,11 +18,21 @@ use SocketManager\Library\SocketManagerParameter;
  * 
  * IInitSocketManagerインタフェースをインプリメントする
  */
-class InitForRawSocketPureLatencyBenchmark implements IInitSocketManager
+class InitForRawSocketStressTest implements IInitSocketManager
 {
+    //--------------------------------------------------------------------------
+    // 定数
+    //--------------------------------------------------------------------------
+
+
     //--------------------------------------------------------------------------
     // プロパティ
     //--------------------------------------------------------------------------
+
+    /**
+     * UNITパラメータインスタンス
+     */
+    protected ?ParameterForRawSocketStressTest $param = null;
 
     /**
      * ポート番号
@@ -41,11 +52,13 @@ class InitForRawSocketPureLatencyBenchmark implements IInitSocketManager
     /**
      * コンストラクタ
      * 
+     * @param SocketManagerParameter $p_param UNITパラメータ
      * @param int $p_port ポート番号
      * @param string $p_protocol プロトコル（TCP or UDP）
      */
-    public function __construct(int $p_port, string $p_protocol)
+    public function __construct(ParameterForRawSocketStressTest $p_param, int $p_port, string $p_protocol)
     {
+        $this->param = $p_param;
         $this->port = $p_port;
         $this->protocol = $p_protocol;
     }
@@ -64,7 +77,7 @@ class InitForRawSocketPureLatencyBenchmark implements IInitSocketManager
             $filename = date('Ymd');
             $now = date('Y-m-d H:i:s');
             $log = $now." {$p_level} ".print_r($p_param, true)."\n";
-            error_log($log, 3, "./logs/socket-manager/{$filename}_{$this->protocol}{$this->port}.log");
+            error_log($log, 3, "./logs/socket-manager/stress-test/{$filename}_{$this->protocol}{$this->port}.log");
         };
     }
 
@@ -108,7 +121,7 @@ class InitForRawSocketPureLatencyBenchmark implements IInitSocketManager
      */
     public function getCommandDispatcher()
     {
-        return function(SocketManagerParameter $p_param, $p_dat): ?string
+        return function(ParameterForRawSocketStressTest $p_param, $p_dat): ?string
         {
             return $p_dat['cmd'];
         };
@@ -136,6 +149,6 @@ class InitForRawSocketPureLatencyBenchmark implements IInitSocketManager
      */
     public function getUnitParameter(): ?SocketManagerParameter
     {
-        return new SocketManagerParameter();
+        return $this->param;
     }
 }
