@@ -35,6 +35,11 @@ class InitForAffinedUdpStressTest implements IInitManager
     protected ?ParameterForAffinedUdpStressTest $param = null;
 
     /**
+     * ホスト
+     */
+    protected ?string $host = null;
+
+    /**
      * ポート番号
      */
     protected ?int $port = null;
@@ -48,11 +53,13 @@ class InitForAffinedUdpStressTest implements IInitManager
      * コンストラクタ
      * 
      * @param SocketManagerParameter $p_param UNITパラメータ
+     * @param string $p_host ホスト
      * @param int $p_port ポート番号
      */
-    public function __construct(ParameterForAffinedUdpStressTest $p_param, int $p_port)
+    public function __construct(ParameterForAffinedUdpStressTest $p_param, string $p_host, int $p_port)
     {
         $this->param = $p_param;
+        $this->host = $p_host;
         $this->port = $p_port;
     }
 
@@ -67,7 +74,7 @@ class InitForAffinedUdpStressTest implements IInitManager
         $filename = date('Ymd');
         $now = date('Y-m-d H:i:s');
         $log = $now." {$p_level} ".print_r($p_param, true)."\n";
-        error_log($log, 3, "./logs/socket-manager/stress-test/{$filename}_AFFINED_UDP_{$this->port}.log");
+        error_log($log, 3, "./logs/socket-manager/stress-test/{$filename}_AFFINED_UDP_{$this->host}_{$this->port}.log");
     }
 
     /**
@@ -80,7 +87,6 @@ class InitForAffinedUdpStressTest implements IInitManager
     public function getLogWriter()
     {
         return null;
-        // return $this->logWriter(...);   // @@@
     }
 
     /**

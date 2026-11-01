@@ -26,15 +26,15 @@ class AffinedUdpStressTest extends Console
     /**
      * @var string $identifer サーバー識別子
      */
-    protected string $identifer = 'app:affined-udp-stress-test {samples} {sampling_interval?} {timeout?} {host?} {port?}';
+    protected string $identifer = 'app:affined-udp-stress-test {samples} {sampling_interval?} {timeout?} {host?} {port?} {local_host?}';
 
     /**
      * @var string $description コマンド説明
      */
-    protected string $description = '接続型 UDP 耐久テスト: {samples} {sampling_interval?} {timeout?} {host?} {port?}';
+    protected string $description = '接続型 UDP 耐久テスト: {samples} {sampling_interval?} {timeout?} {host?} {port?} {local_host?}';
 
     /**
-     * @var string $host ホスト名（接続用）
+     * @var string $host ホスト（接続用）
      */
     private string $host = '127.0.0.1';
 
@@ -42,6 +42,11 @@ class AffinedUdpStressTest extends Console
      * @var int $port ポート番号（接続用）
      */
     private int $port = 10000;
+
+    /**
+     * @var string $local_host ローカルホスト
+     */
+    private string $local_host = '127.0.0.1';
 
     /**
      * @var int $cycle_interval 周期インターバル時間（μs）
@@ -90,7 +95,7 @@ class AffinedUdpStressTest extends Console
         // 設定値の反映
         //--------------------------------------------------------------------------
 
-        // ホスト名の設定
+        // ホストの設定
         $this->host = config('bench_affined_udp.host', $this->host);
 
         // ポート番号の設定
@@ -146,7 +151,7 @@ class AffinedUdpStressTest extends Console
             $this->timeout = $timeout;
         }
 
-        // ホスト名の取得
+        // ホストの取得
         $host = $this->getParameter('host');
         if($host !== null)
         {
@@ -158,6 +163,13 @@ class AffinedUdpStressTest extends Console
         if($port !== null)
         {
             $this->port = $port;
+        }
+
+        // ローカルホストの取得
+        $local_host = $this->getParameter('local_host');
+        if($local_host !== null)
+        {
+            $this->local_host = $local_host;
         }
 
         //--------------------------------------------------------------------------
@@ -179,7 +191,7 @@ class AffinedUdpStressTest extends Console
         $param = new ParameterForAffinedUdpStressTest($samples, $this->sampling_interval);
 
         // モジュール管理クラスの設定値初期設定
-        $init = new InitForAffinedUdpStressTest($param, $this->port);
+        $init = new InitForAffinedUdpStressTest($param, $this->host, $this->port);
         $manager->initManager($init);
 
         // プロトコルUNITの設定
@@ -200,7 +212,7 @@ class AffinedUdpStressTest extends Console
         {
             if($total < $samples)
             {
-                $rid = $manager->connect($this->host, $this->port);
+                $rid = $manager->connect($this->host, $this->port, $this->local_host);
                 if($rid === false)
                 {
                     goto finish;   // リッスン失敗
