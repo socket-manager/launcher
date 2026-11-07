@@ -226,10 +226,6 @@ class ProtocolForAffinedUdpStressTest implements IEntryUnits
             $p_param->setTempBuff(['wait' => $wait]);
             return ProtocolForAffinedUdpStressTestStatusEnum::SENDING->value;
         }
-        // if(PHP_OS_FAMILY === 'Linux')    // @@@
-        // {
-        //     usleep(1);
-        // }
         $w_ret = $p_param->protocol()->sending();
         if($w_ret === null)
         {
