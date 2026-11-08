@@ -26,15 +26,15 @@ class PureUdpStressTest extends Console
     /**
      * @var string $identifer サーバー識別子
      */
-    protected string $identifer = 'app:pure-udp-stress-test {samples} {sampling_interval?} {timeout?} {host?} {port?} {local_port?}';
+    protected string $identifer = 'app:pure-udp-stress-test {samples} {sampling_interval?} {timeout?} {host?} {port?} {local_host?}';
 
     /**
      * @var string $description コマンド説明
      */
-    protected string $description = '純粋 UDP 耐久テスト: {samples} {sampling_interval?} {timeout?} {host?} {port?} {local_port?}';
+    protected string $description = '純粋 UDP 耐久テスト: {samples} {sampling_interval?} {timeout?} {host?} {port?} {local_host?}';
 
     /**
-     * @var string $host ホスト名（接続用）
+     * @var string $host ホスト（接続用）
      */
     private string $host = '127.0.0.1';
 
@@ -44,9 +44,9 @@ class PureUdpStressTest extends Console
     private int $port = 10000;
 
     /**
-     * @var int $port ローカルポート番号
+     * @var string $local_port ローカルホスト
      */
-    private int $local_port = 15000;
+    private string $local_host = '127.0.0.1';
 
     /**
      * @var int $cycle_interval 周期インターバル時間（μs）
@@ -102,7 +102,7 @@ class PureUdpStressTest extends Console
         $this->port = config('bench_pure_udp.port', $this->port);
 
         // ローカルポート番号の設定
-        $this->local_port = config('bench_pure_udp.local_port', $this->local_port);
+        $this->local_host = config('bench_pure_udp.local_host', $this->local_host);
 
         // 周期インターバルの設定
         $this->cycle_interval = config('bench_pure_udp.cycle_interval', $this->cycle_interval);
@@ -126,7 +126,7 @@ class PureUdpStressTest extends Console
         $this->timeout = config('bench_pure_udp.timeout', $this->timeout);
 
         // ペイロードの設定
-        $this->payload = config('bench_pure_udp.payload', $this->payload);
+        $this->payload = config('bench_pure_udp.payload_stress_test', $this->payload);
 
         //--------------------------------------------------------------------------
         // 引数の反映
@@ -169,10 +169,10 @@ class PureUdpStressTest extends Console
         }
 
         // ローカルポート番号の取得
-        $local_port = $this->getParameter('local_port');
-        if($local_port !== null)
+        $local_host = $this->getParameter('local_host');
+        if($local_host !== null)
         {
-            $this->local_port = $local_port;
+            $this->local_host = $local_host;
         }
 
         //--------------------------------------------------------------------------
@@ -198,7 +198,7 @@ class PureUdpStressTest extends Console
         $manager->initManager($init);
 
         // プロトコルUNITの設定
-        $entry = new ProtocolForPureUdpStressTest($this->payload, $this->host, $this->port, $this->local_port);
+        $entry = new ProtocolForPureUdpStressTest($this->payload, $this->host, $this->port, $this->local_host);
         $manager->setProtocolUnits($entry);
 
         // コマンドUNITの設定
@@ -211,14 +211,13 @@ class PureUdpStressTest extends Console
         // ノンブロッキングループ
         //--------------------------------------------------------------------------
 
-        $local_port = $this->local_port;
         $total = 0;
         $param->test_start_time = hrtime(true);
         while(true)
         {
             if($total < $samples)
             {
-                $rid = $manager->connect($this->host, $this->port, $local_port++);
+                $rid = $manager->connect($this->host, $this->port, $this->local_host);
                 if($rid === false)
                 {
                     goto finish;   // リッスン失敗

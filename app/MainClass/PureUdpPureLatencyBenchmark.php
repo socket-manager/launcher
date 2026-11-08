@@ -25,12 +25,12 @@ class PureUdpPureLatencyBenchmark extends Console
     /**
      * @var string $identifer サーバー識別子
      */
-    protected string $identifer = "app:pure-udp-pure-latency-benchmark {samples} {sampling_interval?} {timeout?} {host?} {port?} {local_port?}";
+    protected string $identifer = "app:pure-udp-pure-latency-benchmark {samples} {sampling_interval?} {timeout?} {host?} {port?} {local_host?}";
 
     /**
      * @var string $description コマンド説明
      */
-    protected string $description = '純粋 UDP 純粋性能ベンチマーク: {samples} {sampling_interval?} {timeout?} {host?} {port?} {local_port?}';
+    protected string $description = '純粋 UDP 純粋性能ベンチマーク: {samples} {sampling_interval?} {timeout?} {host?} {port?} {local_host?}';
 
     /**
      * @var string $host ホスト名（接続用）
@@ -45,7 +45,7 @@ class PureUdpPureLatencyBenchmark extends Console
     /**
      * @var int $port ローカルポート番号
      */
-    private int $local_port = 15000;
+    private string $local_host = '127.0.0.1';
 
     /**
      * @var int $cycle_interval 周期インターバル時間（μs）
@@ -101,7 +101,7 @@ class PureUdpPureLatencyBenchmark extends Console
         $this->port = config('bench_pure_udp.port', $this->port);
 
         // ローカルポート番号の設定
-        $this->local_port = config('bench_pure_udp.local_port', $this->local_port);
+        $this->local_host = config('bench_pure_udp.local_host', $this->local_host);
 
         // 周期インターバルの設定
         $this->cycle_interval = config('bench_pure_udp.cycle_interval', $this->cycle_interval);
@@ -125,7 +125,7 @@ class PureUdpPureLatencyBenchmark extends Console
         $this->timeout = config('bench_pure_udp.timeout', $this->timeout);
 
         // ペイロードの設定
-        $this->payload = config('bench_pure_udp.payload', $this->payload);
+        $this->payload = config('bench_pure_udp.payload_pure_latency', $this->payload);
 
         //--------------------------------------------------------------------------
         // 引数の反映
@@ -168,10 +168,10 @@ class PureUdpPureLatencyBenchmark extends Console
         }
 
         // ローカルポート番号の取得
-        $local_port = $this->getParameter('local_port');
-        if($local_port !== null)
+        $local_host = $this->getParameter('local_host');
+        if($local_host !== null)
         {
-            $this->local_port = $local_port;
+            $this->local_host = $local_host;
         }
 
         //--------------------------------------------------------------------------
@@ -205,7 +205,7 @@ class PureUdpPureLatencyBenchmark extends Console
         // 接続開始
         //--------------------------------------------------------------------------
 
-        $rid = $manager->connect($this->host, $this->port, $local_port);
+        $rid = $manager->connect($this->host, $this->port, $this->local_host);
         if($rid === false)
         {
             goto finish;   // リッスン失敗

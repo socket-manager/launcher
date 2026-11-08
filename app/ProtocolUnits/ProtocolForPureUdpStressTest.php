@@ -48,9 +48,9 @@ class ProtocolForPureUdpStressTest implements IEntryUnits
     private int $port = -1;
 
     /**
-     * @var int ローカルポート番号
+     * @var string ローカルホスト
      */
-    private int $local_port = -1;
+    private string $local_host;
 
     /**
      * @var bool 測定中の標準出力フラグ
@@ -76,11 +76,11 @@ class ProtocolForPureUdpStressTest implements IEntryUnits
      * コンストラクタ
      * 
      */
-    public function __construct(string $p_payload, string $p_host, int $p_port, int $p_local_port)
+    public function __construct(string $p_payload, string $p_host, int $p_port, string $p_local_host)
     {
         $this->host = $p_host;
         $this->port = $p_port;
-        $this->local_port = $p_local_port;
+        $this->local_host = $p_local_host;
         $this->stdout = config('bench_pure_udp.stdout', false);
         $this->payload = $p_payload;
         $this->payload_len = strlen($p_payload);
@@ -151,7 +151,7 @@ class ProtocolForPureUdpStressTest implements IEntryUnits
         $p_param->sample_count++;
         if($this->stdout)
         {
-            printf("session count[{$this->local_port}][{$p_param->sample_count}]\r");
+            printf("session count[{$this->local_host}][{$p_param->sample_count}]\r");
         }
         if($p_param->sample_count >= $p_param->samples)
         {
@@ -278,7 +278,7 @@ class ProtocolForPureUdpStressTest implements IEntryUnits
 
             // ファイル保存
             $filename = date('Ymd');
-            $path = "./logs/socket-manager/stress-test/{$filename}-Pure-Udp-{$this->host}-{$this->port}-{$this->local_port}.log";
+            $path = "./logs/socket-manager/stress-test/{$filename}-Pure-Udp-{$this->host}-{$this->port}-{$this->local_host}.log";
             $fp = fopen($path, 'a');
             fputcsv($fp, [$time, $avg, $round_elapsed_ms, $sessions], ',', '"', '\\');
             fclose($fp);

@@ -166,8 +166,7 @@ class ProtocolForPureUdpPureLatencyBenchmark implements IEntryUnits
      */
     private function echoStart(SocketManagerParameter $p_param): ?string
     {
-        $cid = $p_param->getConnectionId();
-        $size = $p_param->protocol()->sendto($cid.$this->payload);
+        $size = $p_param->protocol()->sendto($this->payload);
         if($size === null)
         {
             return null;
@@ -211,8 +210,7 @@ class ProtocolForPureUdpPureLatencyBenchmark implements IEntryUnits
         $timer = $p_param->getTempBuff(['alive_timer']);
         $this->samples_array[] = ($end - $timer['alive_timer']['start'])/1000000;
 
-        $cid = $p_param->getConnectionId();
-        if($data !== $cid.$this->payload)
+        if($data !== $this->payload)
         {
             printf("\nペイロード不正で終了\n");
             exit;
