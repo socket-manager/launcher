@@ -193,7 +193,7 @@ class AffinedUdpPureLatencyBenchmark extends Console
         $rid = $manager->connect($this->host, $this->port);
         if($rid === false)
         {
-            goto finish;   // リッスン失敗
+            goto finish;   // 接続失敗
         }
 
         //--------------------------------------------------------------------------

@@ -220,15 +220,15 @@ class PureUdpStressTest extends Console
                 $rid = $manager->connect($this->host, $this->port, $this->local_host);
                 if($rid === false)
                 {
-                    goto finish;   // リッスン失敗
+                    goto finish;   // 接続失敗
                 }
                 for($i = 0; $i < 20; $i++)
                 {
-                    $cid_str = sprintf("#%05d", $total);
-                    $ret = $manager->openSession($rid, $cid_str);
+                    $sid_str = sprintf("#%05d", $total);
+                    $ret = $manager->openSession($rid, $sid_str);
                     if($ret === false)
                     {
-                        goto finish;   // リッスン失敗
+                        goto finish;   // セッションオープン失敗
                     }
                     $total++;
                 }

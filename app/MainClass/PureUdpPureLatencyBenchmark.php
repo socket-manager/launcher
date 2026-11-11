@@ -208,7 +208,7 @@ class PureUdpPureLatencyBenchmark extends Console
         $rid = $manager->connect($this->host, $this->port, $this->local_host);
         if($rid === false)
         {
-            goto finish;   // リッスン失敗
+            goto finish;   // 接続失敗
         }
         $ret = $manager->openSession($rid);
         if($ret === false)

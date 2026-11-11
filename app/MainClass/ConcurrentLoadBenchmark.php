@@ -136,7 +136,7 @@ class ConcurrentLoadBenchmark extends Console
                 $ret = $manager->connect($this->host, $this->port);
                 if($ret === false)
                 {
-                    goto finish;   // リッスン失敗
+                    goto finish;   // 接続失敗
                 }
             }
 

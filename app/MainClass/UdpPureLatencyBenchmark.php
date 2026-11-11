@@ -165,7 +165,7 @@ class UdpPureLatencyBenchmark extends Console
         $ret = $manager->connect($this->host, $this->port, true);
         if($ret === false)
         {
-            goto finish;   // リッスン失敗
+            goto finish;   // 接続失敗
         }
 
         //--------------------------------------------------------------------------
