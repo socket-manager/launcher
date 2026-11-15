@@ -99,7 +99,6 @@ class CommandForPureUdpStressTest implements IEntryUnits
                 exit;
             }
         }
-// $p_param->logWriter('debug', ['aliveStart']);   // @@@
 
         // アライブチェック実行
         $mgr = $p_param->getSocketManager();
